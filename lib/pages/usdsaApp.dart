@@ -3,8 +3,20 @@ import '../theme.dart';
 import 'NewsStream.dart';
 import 'ActivityCalendar.dart';
 import 'GroupsList.dart';
+import 'AddNewsItem.dart';
 import '../group_options_icons_icons.dart';
 
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+        title: "USDSA App",
+        home: new usdsaApp(),
+        theme: mainTheme,
+    );
+  }
+}
 
 class usdsaApp extends StatefulWidget {
   @override
@@ -54,6 +66,22 @@ class usdsaAppState extends State<usdsaApp>{
 
   List<Widget> actionsBuilder(){
     switch(_currentIndex){
+      case 0:{
+        if (true) {
+          return <Widget>[
+            new IconButton(icon: Icon(Icons.add), onPressed: (){
+              Navigator.push(
+                context,
+                new MaterialPageRoute(builder: (context) => new AddNewsItemPage()),
+              );
+            }),
+          ];
+        }
+        else{
+          return <Widget>[];
+        }
+      }
+      break;
       case 2:{
         return <Widget>[
           new IconButton(icon: Icon(Icons.add), onPressed: null),
@@ -71,7 +99,7 @@ class usdsaAppState extends State<usdsaApp>{
   Text titleChoser(){
     switch(_currentIndex){
       case 0:{
-        return Text('News Stream');
+        return Text('Announcements');
       }
       break;
       case 1: {
@@ -113,6 +141,8 @@ class usdsaAppState extends State<usdsaApp>{
     }
   }
 }
+
+
 
 
 

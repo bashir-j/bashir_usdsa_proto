@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "509925302926",
+    "firebase_url": "https://usdsa-db.firebaseio.com",
+    "project_id": "usdsa-db",
+    "storage_bucket": "usdsa-db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509925302926:android:e4bd7104792ba298",
+        "android_client_info": {
+          "package_name": "com.bashirpackage.usdsaproto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509925302926-gmnf67vspbrggfu9ml610i5605821alh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnQ2dj3Xqv6ToID0tci0-KRGVC_NLul4Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

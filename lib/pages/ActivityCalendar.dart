@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar/flutter_calendar.dart';
+import 'package:usdsa_proto/flutter_calendar_mod/flutter_calendar.dart';
 
 class activityCalendarBuilder extends StatefulWidget {
   @override
@@ -13,7 +13,7 @@ class _activityCalendarState extends State<activityCalendarBuilder> {
     return new Column(
       children: <Widget>[
         new Calendar(
-          isExpandable: true,
+          isExpandable: false,
           onDateSelected: (newSelectedDate) {
             setState(() {
               selectedDate = newSelectedDate;
@@ -34,7 +34,7 @@ Widget _eventHolderBuilder(){
     return new ListView(
       children: <Widget>[
         new Text("No events on the day of"),
-        new Text(selectedDate.day.toString()),
+        new Text(selectedDate.day.toString() + '/' + selectedDate.month.toString()),
       ],
     );
 }

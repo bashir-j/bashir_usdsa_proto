@@ -107,7 +107,7 @@ class usdsaAppState extends State<usdsaApp>{
       }
       break;
       case 2: {
-        return new Text("My Groups");
+        return Text("My Groups");
       }
       break;
 

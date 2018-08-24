@@ -344,6 +344,7 @@ class _CalendarState extends State<Calendar> {
         onConfirm: (year, month, date) {
           setState(() {
             selected = new DateTime.utc(year,month,date);
+            _launchDateSelectionCallback(selected);
           });
         },
       );

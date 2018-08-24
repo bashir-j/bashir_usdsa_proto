@@ -344,6 +344,13 @@ class _CalendarState extends State<Calendar> {
         onConfirm: (year, month, date) {
           setState(() {
             selected = new DateTime.utc(year,month,date);
+            var firstDayOfCurrentWeek = Utils.firstDayOfWeek(selected);
+            var lastDayOfCurrentWeek = Utils.lastDayOfWeek(selected);
+            selectedWeeksDays = Utils
+                .daysInRange(firstDayOfCurrentWeek, lastDayOfCurrentWeek)
+                .toList();
+            selectedMonthsDays = Utils.daysInMonth(selected);
+            displayMonth = Utils.formatMonth(Utils.firstDayOfWeek(selected));
             _launchDateSelectionCallback(selected);
           });
         },

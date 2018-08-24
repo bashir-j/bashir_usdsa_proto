@@ -320,7 +320,7 @@ class _CalendarState extends State<Calendar> {
   }
 
   Future<Null> selectDateFromPicker() async {
-    String _datetime = '';
+
     DateTime selected;
     final ios = Theme.of(context).platform == TargetPlatform.iOS;
     if (!ios) {
@@ -333,19 +333,17 @@ class _CalendarState extends State<Calendar> {
     }else if(ios){
       DatePicker.showDatePicker(
         context,
-        showTitleActions: false,
         minYear: 1970,
-        maxYear: 2020,
-        initialYear: 2018,
-        initialMonth: 8,
-        initialDate: 23,
-        locale: 'zh',
+        maxYear: 2070,
+        initialYear: today.year,
+        initialMonth: today.month,
+        initialDate: today.day,
         onChanged: (year, month, date) {
           print('onChanged date: $year-$month-$date');
         },
         onConfirm: (year, month, date) {
           setState(() {
-            _datetime = '$year-$month-$date';
+            selected = new DateTime.utc(year,month,date);
           });
         },
       );

@@ -420,6 +420,8 @@ class _CalendarState extends State<Calendar> {
           .daysInRange(firstDayOfCurrentWeek, lastDayOfCurrentWeek)
           .toList();
       selectedMonthsDays = Utils.daysInMonth(day);
+      displayMonth = Utils.formatMonth(Utils.firstDayOfMonth(day));
+
     });
     _launchDateSelectionCallback(day);
   }

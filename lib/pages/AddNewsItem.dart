@@ -27,6 +27,7 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextStyle titleStyle = theme.textTheme.headline.copyWith(color: Colors.black);
+    final TextStyle subStyle = theme.textTheme.body1;
     final format = new DateFormat('dd-MM-yyyy');
 
     String description;
@@ -54,64 +55,93 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
 //                        ? new Text('No image selected.')
 //                        : new Image.file(_image),
 //                  ),
-                  new TextFormField(
-                    decoration: InputDecoration(
-                      labelStyle: titleStyle,
-                      labelText: "Image URL",
-                      hintText: "Enter Image URL Here"
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: new TextFormField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        ),
+                        labelStyle: titleStyle.copyWith(color: Colors.black54),
+                        isDense: false,
+                        labelText: "Image URL",
+                        hintText: "Enter Image URL Here",
+                      ),
+
+                      validator: (value){
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value){
+                        imgurl = value;
+                      },
                     ),
-                    validator: (value){
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                    },
-                    onSaved: (value){
-                      imgurl = value;
-                    },
                   ),
-                  new TextFormField(
-                    decoration: InputDecoration(
-                        labelStyle: titleStyle,
-                        labelText: "Announcement Title",
-                        hintText: "Enter Title Here"
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: new TextFormField(
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                          ),
+                          labelStyle: titleStyle,
+                          labelText: "Announcement Title",
+                          hintText: "Enter Title Here"
+                      ),
+                      validator: (value){
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value){
+                        title = value;
+                      },
                     ),
-                    validator: (value){
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                    },
-                    onSaved: (value){
-                      title = value;
-                    },
                   ),
                   new Text("Select Date", style: titleStyle,),
-                  new IconButton(
-                      alignment: Alignment.centerLeft,
-                      icon: Icon(Icons.today),
-                      onPressed: ()async {
-                    DateTime newDT = await showDatePicker(
-                      context: context,
-                      initialDate: selectedDate ?? new DateTime.now(),
-                      firstDate: new DateTime(1960),
-                      lastDate: new DateTime(2050),
-                    );
-                    setState(() {
-                      selectedDate = newDT;
-                    });
-                  }),
-                  new Text(selectedDate == null ? "Select Date" : format.format(selectedDate)),
-                  new TextFormField(
-                    decoration: InputDecoration(
-                        labelStyle: titleStyle,
-                        labelText: "Announcement Description",
-                        hintText: "Enter Description Here"
+                  new Row(
+                    children: <Widget>[
+                      new IconButton(
+                          alignment: Alignment.centerLeft,
+                          icon: Icon(Icons.today),
+                          onPressed: ()async {
+                            DateTime newDT = await showDatePicker(
+                              context: context,
+                              initialDate: selectedDate ?? new DateTime.now(),
+                              firstDate: new DateTime(1960),
+                              lastDate: new DateTime(2050),
+                            );
+                            setState(() {
+                              selectedDate = newDT;
+                            });
+                          }),
+                      new Text(
+                        selectedDate == null ? "No Date Selected" : format.format(selectedDate),
+                        style: selectedDate == null ? subStyle.copyWith(color: Colors.black54) : subStyle,
+
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: new TextFormField(
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                          ),
+                          labelStyle: titleStyle,
+                          labelText: "Announcement Description",
+                          hintText: "Enter Description Here"
+                      ),
+                      onSaved: (value){
+                        description = value;
+                      },
                     ),
-                    onSaved: (value){
-                      description = value;
-                    },
                   ),
                   new RaisedButton(
                       child: new Text("Submit"),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
                       onPressed: (){
                         final FormState form = _formKey.currentState;
                         form.save();

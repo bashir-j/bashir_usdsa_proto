@@ -5,7 +5,7 @@ ThemeData mainTheme = new ThemeData(
   brightness: Brightness.light,
   buttonColor: const Color(0xFF05A991),
   buttonTheme: ButtonThemeData(
-    height: 48.0,
+    height: 40.0,
   )
 
 

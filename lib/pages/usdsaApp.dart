@@ -4,6 +4,7 @@ import 'NewsStream.dart';
 import 'ActivityCalendar.dart';
 import 'GroupsList.dart';
 import 'AddNewsItem.dart';
+import 'LoginScreen.dart';
 import '../group_options_icons_icons.dart';
 
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
         title: "USDSA App",
-        home: new usdsaApp(),
+        home: new loginScreen(),
         theme: mainTheme,
     );
   }
@@ -29,7 +30,7 @@ class usdsaAppState extends State<usdsaApp>{
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: "USDSA App",
+      title: "USDSA",
       home: scaffoldCreator(),
       theme: mainTheme,
     );
@@ -40,6 +41,7 @@ class usdsaAppState extends State<usdsaApp>{
 
     return new Scaffold(
       appBar: new AppBar(
+        centerTitle: false,
         title: titleChoser(),
         actions: actionsBuilder(),
       ),
@@ -48,7 +50,7 @@ class usdsaAppState extends State<usdsaApp>{
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(icon: new Icon(GroupOptionsIcons.newspaper), title: new Text("News")),
           new BottomNavigationBarItem(icon: new Icon(Icons.calendar_today), title: new Text("Calendar")),
-          new BottomNavigationBarItem(icon: new Icon(GroupOptionsIcons.group), title: new Text("Groups")),
+          new BottomNavigationBarItem(icon: new Icon(GroupOptionsIcons.group), title: new Text("Committees")),
           new BottomNavigationBarItem(icon: new Icon(Icons.settings), title: new Text("Settings")),
         ],
         currentIndex: _currentIndex,
@@ -82,6 +84,22 @@ class usdsaAppState extends State<usdsaApp>{
         }
       }
       break;
+      case 1:{
+        if (true) {
+          return <Widget>[
+            new IconButton(icon: Icon(Icons.add), onPressed: (){
+//              Navigator.push(
+//                context,
+//                new MaterialPageRoute(builder: (context) => new AddEventPage()),
+//              );
+            }),
+          ];
+        }
+        else{
+          return <Widget>[];
+        }
+      }
+      break;
       case 2:{
         return <Widget>[
           new IconButton(icon: Icon(Icons.add), onPressed: null),
@@ -107,10 +125,13 @@ class usdsaAppState extends State<usdsaApp>{
       }
       break;
       case 2: {
-        return Text("My Groups");
+        return Text("My Committees");
       }
       break;
-
+      case 3: {
+        return Text("Settings");
+      }
+      break;
       default: {
         return new Text("default error");
       }
@@ -133,7 +154,10 @@ class usdsaAppState extends State<usdsaApp>{
         return new groupsListBuilder();
       }
       break;
-
+      case 3: {
+        return new Text("default error");
+      }
+      break;
       default: {
         return new Text("default error");
       }

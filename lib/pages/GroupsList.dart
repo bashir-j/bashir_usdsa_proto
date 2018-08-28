@@ -155,7 +155,7 @@ List<GroupItem> groupsList = <GroupItem>[
   ),
   const GroupItem(
     groupIconURL: "https://i.imgur.com/BoN9kdC.png",
-    groupName: 'Group 22',
+    groupName: 'committee1',
     description: "Here is the description of the group again",
   ),
   const GroupItem(

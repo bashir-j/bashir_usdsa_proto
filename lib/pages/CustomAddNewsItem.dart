@@ -11,12 +11,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as p;
 
-class AddNewsItemPage extends StatefulWidget{
+//import 'package:image_picker/image_picker.dart';
+
+class CustomAddNewsItemPage extends StatefulWidget{
+  CustomAddNewsItemPage({@required this.committeeName});
+  final String committeeName;
+
   @override
-  _AddNewsItemPageState createState() => new _AddNewsItemPageState();
+  _CustomAddNewsItemPageState createState() => new _CustomAddNewsItemPageState();
 }
 
-class _AddNewsItemPageState extends State<AddNewsItemPage>{
+class _CustomAddNewsItemPageState extends State<CustomAddNewsItemPage>{
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   File _image;
   DateTime selectedDate;
@@ -24,14 +29,14 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
     // fetch file name
     String fileName = p.basename(_image.path);
     final StorageReference ref = FirebaseStorage.instance.ref().child(
-        "images/$fileName");
+        "images/"+widget.committeeName+"/$fileName");
     final StorageUploadTask uploadTask = ref.putFile(_image, StorageMetadata(contentLanguage: "en"));
 
     final Uri downloadUrl = (await uploadTask.future).downloadUrl;
 
     dataMap["newsImgUrl"] = downloadUrl.toString();
     setState(() {
-      Firestore.instance.collection('announcements').document().setData(dataMap);
+      Firestore.instance.collection('committees').document(widget.committeeName).collection('announcements').document().setData(dataMap);
       Navigator.pop(context);
     });
   }
@@ -90,13 +95,13 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
                                 onPressed: getImage
                             ),
                             new Expanded(
-                              child: _image == null ?
-                              Text("No Image Selected",
-                                style: subStyle.copyWith(color: Colors.black54)) :
-                              Container(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.file(_image),
-                              )
+                                child: _image == null ?
+                                Text("No Image Selected",
+                                    style: subStyle.copyWith(color: Colors.black54)) :
+                                Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.file(_image),
+                                )
                             ),
                           ],
                         ),

@@ -35,6 +35,16 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
       Navigator.pop(context);
     });
   }
+//  Future<Null> showLoading() async{
+//    await showDialog(context: context,
+//    builder: (BuildContext context){
+//      return new SimpleDialog(
+//        children: <Widget>[
+//          new CircularProgressIndicator()
+//        ],
+//      );
+//    });
+//  }
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
@@ -239,6 +249,7 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
                         dataMap["description"] = description;
                         dataMap["title"] = title;
                         _uploadImage(dataMap);
+
                       }
                   )
                 ],

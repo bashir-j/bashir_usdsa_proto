@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import 'package:usdsa_proto/flutter_calendar_mod/calendar_tile.dart';
-import 'package:date_utils/date_utils.dart';
+import 'date_utils.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 
 typedef DayBuilder(BuildContext context, DateTime day);

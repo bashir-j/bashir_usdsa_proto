@@ -6,6 +6,8 @@ import 'GroupsList.dart';
 import 'AddNewsItem.dart';
 import 'LoginScreen.dart';
 import '../group_options_icons_icons.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../UserSingleton.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -27,6 +29,7 @@ class usdsaApp extends StatefulWidget {
 class usdsaAppState extends State<usdsaApp>{
 
   int _currentIndex = 0;
+  UserSingleton userSing = new UserSingleton();
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -69,7 +72,7 @@ class usdsaAppState extends State<usdsaApp>{
   List<Widget> actionsBuilder(){
     switch(_currentIndex){
       case 0:{
-        if (true) {
+        if (userSing.userPriority == '2') {
           return <Widget>[
             new IconButton(icon: Icon(Icons.add), onPressed: (){
               Navigator.push(
@@ -85,7 +88,7 @@ class usdsaAppState extends State<usdsaApp>{
       }
       break;
       case 1:{
-        if (true) {
+        if (userSing.userPriority == '2') {
           return <Widget>[
             new IconButton(icon: Icon(Icons.add), onPressed: (){
 //              Navigator.push(

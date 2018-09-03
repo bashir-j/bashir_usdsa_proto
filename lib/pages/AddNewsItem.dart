@@ -21,14 +21,18 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
   File _image;
   DateTime selectedDate;
   Future _uploadImage(Map<String, dynamic> dataMap) async {
+    final ios = Theme.of(context).platform == TargetPlatform.iOS;
     // fetch file name
     String fileName = p.basename(_image.path);
+    if(!ios){
+      fileName = DateTime.now().toString();
+    }
     final StorageReference ref = FirebaseStorage.instance.ref().child(
         "images/$fileName");
     final StorageUploadTask uploadTask = ref.putFile(_image, StorageMetadata(contentLanguage: "en"));
 
     final Uri downloadUrl = (await uploadTask.future).downloadUrl;
-
+    
     dataMap["newsImgUrl"] = downloadUrl.toString();
     setState(() {
       Firestore.instance.collection('announcements').document().setData(dataMap);

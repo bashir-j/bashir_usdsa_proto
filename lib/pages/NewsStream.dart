@@ -11,14 +11,16 @@ class NewsItem {
     this.title,
     this.description,
     this.date,
+    this.docID,
   });
 
   final String newsImgUrl;
   final String title;
   final String description;
   final String date;
+  final String docID;
 
-  bool get isValid => newsImgUrl != null && title != null && description != null && date != null;
+  bool get isValid => newsImgUrl != null && title != null && description != null && date != null && docID != null;
 }
 
 
@@ -143,7 +145,7 @@ class _newsStreamState extends State<newsStreamBuilder>{
     return new StreamBuilder(
         stream: Firestore.instance.collection('announcements').orderBy("date", descending: true).snapshots(),
         builder: (context, snapshot){
-          if (!snapshot.hasData) return const Text('Loading...');
+          if (!snapshot.hasData) return Center(child: new CircularProgressIndicator());
           return new Scrollbar(
               child: new ListView.builder(
                   itemCount: snapshot.data.documents.length,
@@ -154,6 +156,7 @@ class _newsStreamState extends State<newsStreamBuilder>{
                     DateTime dt = ds['date'];
                     final format = new DateFormat('dd-MM-yyyy');
                     NewsItem snapshotToItem = new NewsItem(
+                      docID: ds.documentID,
                       newsImgUrl: ds['newsImgUrl'],
                       date: format.format(dt),
                       title: ds['title'],

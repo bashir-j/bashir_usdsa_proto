@@ -11,6 +11,8 @@ class CalendarTile extends StatelessWidget {
   final TextStyle dateStyles;
   final Widget child;
 
+  final bool hasEvent;
+
   CalendarTile({
     this.onDateSelected,
     this.date,
@@ -18,6 +20,7 @@ class CalendarTile extends StatelessWidget {
     this.dateStyles,
     this.dayOfWeek,
     this.dayOfWeekStyles,
+    this.hasEvent: false,
     this.isDayOfWeek: false,
     this.isSelected: false,
   });
@@ -44,10 +47,28 @@ class CalendarTile extends StatelessWidget {
                 )
               : new BoxDecoration(),
           alignment: Alignment.center,
-          child: new Text(
-            Utils.formatDay(date).toString(),
-            style: isSelected ? new TextStyle(color: Colors.white) : dateStyles,
-            textAlign: TextAlign.center,
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              new Text(
+                Utils.formatDay(date).toString(),
+                style: isSelected ? new TextStyle(color: Colors.white) : dateStyles,
+                textAlign: TextAlign.center,
+              ),
+              hasEvent ? new Container(
+                height: 10.0,
+                decoration: new BoxDecoration(
+                  color: Colors.orange,
+                  shape: BoxShape.circle,
+                ),
+              ): new Container(
+                height: 0.0,
+                decoration: new BoxDecoration(
+                  color: Colors.orange,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
           ),
         ),
       );

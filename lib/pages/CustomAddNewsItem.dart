@@ -26,8 +26,12 @@ class _CustomAddNewsItemPageState extends State<CustomAddNewsItemPage>{
   File _image;
   DateTime selectedDate;
   Future _uploadImage(Map<String, dynamic> dataMap) async {
+    final ios = Theme.of(context).platform == TargetPlatform.iOS;
     // fetch file name
     String fileName = p.basename(_image.path);
+    if(!ios){
+      fileName = DateTime.now().toString();
+    }
     final StorageReference ref = FirebaseStorage.instance.ref().child(
         "images/"+widget.committeeName+"/$fileName");
     final StorageUploadTask uploadTask = ref.putFile(_image, StorageMetadata(contentLanguage: "en"));

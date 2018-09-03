@@ -161,7 +161,7 @@ class _customNewsStreamState extends State<customNewsStreamBuilder>{
       body: new StreamBuilder(
           stream: Firestore.instance.collection('committees').document(widget.committeeName).collection('announcements').orderBy("date", descending: true).snapshots(),
           builder: (context, snapshot){
-            if (!snapshot.hasData) return const Text('Loading...))))');
+            if (!snapshot.hasData) return Center(child: new CircularProgressIndicator());
             return new Scrollbar(
                 child: new ListView.builder(
                     itemCount: snapshot.data.documents.length,

@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'usdsaApp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../UserSingleton.dart';
 
 class loginScreen extends StatefulWidget{
   _loginScreenState createState() => new _loginScreenState();
 }
 
 class _loginScreenState extends State<loginScreen>{
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -77,15 +80,17 @@ class _loginScreenState extends State<loginScreen>{
                           final firebaseUser = await FirebaseAuth.instance.signInWithEmailAndPassword(
                               email: 'usdsaadmin@yopmail.com',
                               password: '123456'
-                          ).whenComplete((){
+                          ).then((user)async {
+                            UserSingleton userSing = new UserSingleton();
+                            userSing.userID = user.uid;
+                            userSing.userEmail = user.email;
+                            DocumentSnapshot ds = await Firestore.instance.collection('users').document(user.uid).get();
+                            userSing.userPriority = ds['priority'];
                             Navigator.push(
                               context,
                               new MaterialPageRoute(builder: (context) => new usdsaApp()),
                             );
                           });
-
-
-
                         }
                       ),
                     )

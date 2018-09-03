@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
-import 'package:usdsa_proto/flutter_calendar_mod//calendar_tile.dart';
+import 'package:usdsa_proto/flutter_calendar_mod/calendar_tile.dart';
 import 'package:date_utils/date_utils.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 
@@ -45,6 +46,9 @@ class _CalendarState extends State<Calendar> {
   String currentMonth;
   bool isExpanded = true;
   String displayMonth;
+  bool downloadedFlag = false;
+  List<Widget> newDayWidgets = [];
+
 
   DateTime get selectedDate => _selectedDate;
 
@@ -52,6 +56,7 @@ class _CalendarState extends State<Calendar> {
     super.initState();
     if(widget.initialCalendarDateOverride != null) today = widget.initialCalendarDateOverride;
     selectedMonthsDays = Utils.daysInMonth(today);
+    print(selectedMonthsDays);
     var firstDayOfCurrentWeek = Utils.firstDayOfWeek(today);
     var lastDayOfCurrentWeek = Utils.lastDayOfWeek(today);
     selectedWeeksDays = Utils
@@ -60,6 +65,7 @@ class _CalendarState extends State<Calendar> {
         .sublist(0, 7);
     _selectedDate = today;
     displayMonth = Utils.formatMonth(Utils.firstDayOfWeek(today));
+    AsyncCalendarBuilder();
   }
 
   Widget get nameAndIconRow {
@@ -124,25 +130,85 @@ class _CalendarState extends State<Calendar> {
         onHorizontalDragUpdate: (gestureDetails) =>
             getDirection(gestureDetails),
         onHorizontalDragEnd: (gestureDetails) => endSwipe(gestureDetails),
-        child: new GridView.count(
-          shrinkWrap: true,
-          crossAxisCount: 7,
-          childAspectRatio: 1.0,
-          mainAxisSpacing: 0.0,
-          padding: new EdgeInsets.only(bottom: 0.0),
-          children: calendarBuilder(),
-        ),
+        child: gridviewWidgetBuilder(),
       ),
     );
   }
 
+  Widget gridviewWidgetBuilder(){
+    return new GridView.count(
+      shrinkWrap: true,
+      crossAxisCount: 7,
+      childAspectRatio: 1.0,
+      mainAxisSpacing: 0.0,
+      padding: new EdgeInsets.only(bottom: 0.0),
+      children: downloadedFlag ? newSelRebuilder() : calendarBuilder(),
+    );
+  }
+//  Widget asyncGridViewWidgetBuilder(){
+//    return FutureBuilder(
+//      future: calendarBuilder(),
+//      builder: (BuildContext context, AsyncSnapshot snapshot) {
+//        print("builder called");
+//        return new GridView.count(
+//          shrinkWrap: true,
+//          crossAxisCount: 7,
+//          childAspectRatio: 1.0,
+//          mainAxisSpacing: 0.0,
+//          padding: new EdgeInsets.only(bottom: 0.0),
+//          children: snapshot.data != null ? snapshot.data : <Widget>[] ,
+//        );
+//      }
+//    );
+//  }
+  List<Widget> newSelRebuilder() {
+    List<Widget> tempDays = [];
+    Utils.weekdays.forEach(
+          (day) {
+        tempDays.add(
+          new CalendarTile(
+            isDayOfWeek: true,
+            dayOfWeek: day,
+          ),
+        );
+      },
+    );
+
+    for(CalendarTile tile in newDayWidgets){
+      if(!tile.isDayOfWeek) {
+
+        tempDays.add(
+            new CalendarTile(
+              onDateSelected: tile.onDateSelected,
+              date: tile.date,
+              child: tile.child,
+              dateStyles: tile.dateStyles,
+              dayOfWeek: tile.dayOfWeek,
+              dayOfWeekStyles: tile.dayOfWeekStyles,
+              hasEvent: tile.hasEvent,
+              isDayOfWeek: tile.isDayOfWeek,
+              isSelected: Utils.isSameDay(selectedDate, tile.date),
+            )
+        );
+      }
+    }
+    setState(() {
+      newDayWidgets = tempDays;
+    });
+
+
+    return tempDays;
+  }
+
+
   List<Widget> calendarBuilder() {
+
     List<Widget> dayWidgets = [];
     List<DateTime> calendarDays =
-        isExpanded ? selectedMonthsDays : selectedWeeksDays;
+    isExpanded ? selectedMonthsDays : selectedWeeksDays;
 
     Utils.weekdays.forEach(
-      (day) {
+          (day) {
         dayWidgets.add(
           new CalendarTile(
             isDayOfWeek: true,
@@ -156,7 +222,7 @@ class _CalendarState extends State<Calendar> {
     bool monthEnded = false;
 
     calendarDays.forEach(
-      (day) {
+          (day) {
         if (monthStarted && day.day == 01) {
           monthEnded = true;
         }
@@ -184,6 +250,79 @@ class _CalendarState extends State<Calendar> {
       },
     );
     return dayWidgets;
+  }
+
+  Future<List<Widget>> AsyncCalendarBuilder() async{
+    print("downloading");
+    newDayWidgets.clear();
+    List<DateTime> calendarDays =
+        isExpanded ? selectedMonthsDays : selectedWeeksDays;
+
+    Utils.weekdays.forEach(
+      (day) {
+        newDayWidgets.add(
+          new CalendarTile(
+            isDayOfWeek: true,
+            dayOfWeek: day,
+          ),
+        );
+      },
+    );
+
+    bool monthStarted = false;
+    bool monthEnded = false;
+    bool hasEventTemp = false;
+    DocumentSnapshot ds = await Firestore.instance.collection('events').
+    document(selectedDate.month.toString() + '-' + selectedDate.year.toString()).get();
+    var days = new List<String>.from(ds['days']);
+    calendarDays.forEach((day){
+
+      hasEventTemp = days.contains(day.day.toString());
+      if(hasEventTemp){
+        days.remove(day.day.toString());
+      }
+
+      if (monthStarted && day.day == 01) {
+        monthEnded = true;
+      }
+
+      if (Utils.isFirstDayOfMonth(day)) {
+        monthStarted = true;
+      }
+
+      if (this.widget.dayBuilder != null) {
+        newDayWidgets.add(
+          new CalendarTile(
+            child: this.widget.dayBuilder(context, day),
+          ),
+        );
+      } else {
+        print("added");
+        newDayWidgets.add(
+          new CalendarTile(
+            hasEvent: hasEventTemp,
+            onDateSelected: () => handleSelectedDateAndUserCallback(day),
+            date: day,
+            dateStyles: configureDateStyle(monthStarted, monthEnded),
+            isSelected: Utils.isSameDay(selectedDate, day),
+          ),
+        );
+      }
+
+    }
+    );
+
+//    calendarDays.forEach(
+//      (day)  async {
+//
+//      },
+//    );
+    print("returned");
+    setState(() {
+      downloadedFlag = true;
+    });
+
+    return newDayWidgets;
   }
 
   TextStyle configureDateStyle(monthStarted, monthEnded) {
@@ -228,7 +367,7 @@ class _CalendarState extends State<Calendar> {
         children: <Widget>[
           nameAndIconRow,
           new ExpansionCrossFade(
-            collapsed: calendarGridView,
+            collapsed: new Text("hi"),
             expanded: calendarGridView,
             isExpanded: isExpanded,
           ),
@@ -251,8 +390,9 @@ class _CalendarState extends State<Calendar> {
       selectedMonthsDays = Utils.daysInMonth(_selectedDate);
       updateSelectedRange(firstDayOfCurrentMonth, lastDayOfCurrentMonth);
       displayMonth = Utils.formatMonth(Utils.firstDayOfMonth(today));
+      downloadedFlag = false;
     });
-
+    AsyncCalendarBuilder();
     _launchDateSelectionCallback(today);
   }
 
@@ -265,7 +405,9 @@ class _CalendarState extends State<Calendar> {
       selectedMonthsDays = Utils.daysInMonth(today);
       _selectedDate = firstDateOfNewMonth;
       displayMonth = Utils.formatMonth(Utils.firstDayOfMonth(today));
+      downloadedFlag = false;
     });
+    AsyncCalendarBuilder();
     _launchDateSelectionCallback(today);
 
   }
@@ -279,8 +421,10 @@ class _CalendarState extends State<Calendar> {
       selectedMonthsDays = Utils.daysInMonth(today);
       _selectedDate = firstDateOfNewMonth;
       displayMonth = Utils.formatMonth(Utils.firstDayOfMonth(today));
+      downloadedFlag = false;
     });
     _launchDateSelectionCallback(today);
+    AsyncCalendarBuilder();
 
   }
 
@@ -352,6 +496,8 @@ class _CalendarState extends State<Calendar> {
                 .toList();
             selectedMonthsDays = Utils.daysInMonth(selected);
             displayMonth = Utils.formatMonth(Utils.firstDayOfMonth(selected));
+            downloadedFlag = false;
+            AsyncCalendarBuilder();
             _launchDateSelectionCallback(selected);
           });
         },
@@ -369,7 +515,9 @@ class _CalendarState extends State<Calendar> {
             .toList();
         selectedMonthsDays = Utils.daysInMonth(selected);
         displayMonth = Utils.formatMonth(Utils.firstDayOfMonth(selected));
+        downloadedFlag = false;
       });
+      AsyncCalendarBuilder();
 
       _launchDateSelectionCallback(selected);
     }

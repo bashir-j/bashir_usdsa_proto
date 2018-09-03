@@ -37,7 +37,6 @@ class GroupItemCard extends StatelessWidget{
           children: <Widget>[
             new Container(
               padding: const EdgeInsets.all(8.0),
-
               width: 85.0,
               height: 85.0,
               child: new ClipOval(
@@ -96,16 +95,11 @@ class groupsListBuilder extends StatefulWidget {
 class _groupsListState extends State<groupsListBuilder>{
   @override
   Widget build(BuildContext context) {
-    return new RefreshIndicator(
-      child: new Scrollbar(
-        child: new ListView(
-          padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
-          children: _getItems(),
-        ),
+    return new Scrollbar(
+      child: new ListView(
+        padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+        children: _getItems(),
       ),
-      onRefresh: (){
-
-      },
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class NewsItem {
   const NewsItem({
@@ -64,7 +65,7 @@ class NewsItemCard extends StatelessWidget {
                   children: <Widget>[
                     new Positioned.fill(
                       child: new Image(
-                        image: new NetworkImage(newsItem.newsImgUrl),
+                        image: new CachedNetworkImageProvider(newsItem.newsImgUrl),
                         fit: BoxFit.cover,
                       ),
                     ),

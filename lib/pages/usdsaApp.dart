@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:usdsa_proto/pages/AddEventPage.dart';
 import '../theme.dart';
 import 'NewsStream.dart';
 import 'ActivityCalendar.dart';
@@ -91,10 +92,10 @@ class usdsaAppState extends State<usdsaApp>{
         if (userSing.userPriority == '2') {
           return <Widget>[
             new IconButton(icon: Icon(Icons.add), onPressed: (){
-//              Navigator.push(
-//                context,
-//                new MaterialPageRoute(builder: (context) => new AddEventPage()),
-//              );
+              Navigator.push(
+                context,
+                new MaterialPageRoute(builder: (context) => new AddEventPage()),
+              );
             }),
           ];
         }

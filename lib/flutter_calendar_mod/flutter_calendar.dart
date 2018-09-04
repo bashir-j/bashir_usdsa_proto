@@ -277,17 +277,16 @@ class _CalendarState extends State<Calendar> {
     var days = new List<String>.from(ds['days']);
     calendarDays.forEach((day){
 
-      hasEventTemp = days.contains(day.day.toString());
-      if(hasEventTemp){
-        days.remove(day.day.toString());
-      }
-
       if (monthStarted && day.day == 01) {
         monthEnded = true;
       }
 
       if (Utils.isFirstDayOfMonth(day)) {
         monthStarted = true;
+      }
+      hasEventTemp = days.contains(day.day.toString()) && monthStarted;
+      if(hasEventTemp){
+        days.remove(day.day.toString());
       }
 
       if (this.widget.dayBuilder != null) {

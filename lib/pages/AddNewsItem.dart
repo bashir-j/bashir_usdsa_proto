@@ -10,6 +10,7 @@ import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as p;
+import 'package:image_cropper/image_cropper.dart';
 
 class AddNewsItemPage extends StatefulWidget{
   @override
@@ -50,8 +51,14 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
 //    });
 //  }
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-
+    var imagePreCrop = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image = await ImageCropper.cropImage(
+      sourcePath: imagePreCrop.path,
+      ratioX: 1.666,
+      ratioY: 1.0,
+      maxWidth: 512,
+      maxHeight: 512,
+    );
     setState(() {
       _image = image;
     });

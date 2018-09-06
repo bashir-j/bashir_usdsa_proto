@@ -8,7 +8,8 @@ import 'AddNewsItem.dart';
 import 'LoginScreen.dart';
 import '../group_options_icons_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../UserSingleton.dart';
+import 'package:usdsa_proto/UserSingleton.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -31,6 +32,8 @@ class usdsaAppState extends State<usdsaApp>{
 
   int _currentIndex = 0;
   UserSingleton userSing = new UserSingleton();
+  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -42,6 +45,8 @@ class usdsaAppState extends State<usdsaApp>{
 
 
   Scaffold scaffoldCreator(){
+    _firebaseMessaging.requestNotificationPermissions();
+    _firebaseMessaging.subscribeToTopic("announcements");
 
     return new Scaffold(
       appBar: new AppBar(

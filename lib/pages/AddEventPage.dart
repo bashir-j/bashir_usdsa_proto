@@ -147,6 +147,15 @@ class _AddEventPageState extends State<AddEventPage>{
                       child: new Text("Submit"),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
                       onPressed: ()async {
+                        showDialog(context: context,
+                            barrierDismissible: false,
+                            builder: (context){
+                              return Center(
+                                child: Container(child: new CircularProgressIndicator()
+                                ),
+                              );
+                            }
+                        );
                         final FormState form = _formKey.currentState;
                         form.save();
                         Map<String, dynamic> dataMap = new Map<String, dynamic>();
@@ -179,7 +188,7 @@ class _AddEventPageState extends State<AddEventPage>{
                             .document()
                             .setData(dataMap);
                         Navigator.pop(context);
-
+                        Navigator.pop(context);
                       }
                   )
                 ],

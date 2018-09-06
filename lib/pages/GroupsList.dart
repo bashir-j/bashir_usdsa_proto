@@ -71,8 +71,7 @@ class GroupItemCard extends StatelessWidget{
             new IconButton(
                 icon: new Icon(Icons.chevron_right),
                 onPressed: (){
-                  Navigator.push(
-                    context,
+                  Navigator.of(context).push(
                     new MaterialPageRoute(builder: (context) => new GroupPage(groupItem: groupItem)),
                   );
                 }

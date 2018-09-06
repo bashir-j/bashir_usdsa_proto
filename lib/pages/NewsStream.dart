@@ -31,7 +31,7 @@ class NewsItemCard extends StatelessWidget {
       : assert(newsItem != null && newsItem.isValid),
         super(key: key);
 
-  static const double height = 400.0;
+  static const double height = 350.0;
   final NewsItem newsItem;
 
   @override
@@ -51,8 +51,8 @@ class NewsItemCard extends StatelessWidget {
             borderRadius: const BorderRadius.only(
               topLeft: const Radius.circular(16.0),
               topRight: const Radius.circular(16.0),
-              bottomLeft: const Radius.circular(2.0),
-              bottomRight: const Radius.circular(2.0),
+              bottomLeft: const Radius.circular(16.0),
+              bottomRight: const Radius.circular(16.0),
             ),
           ),
           child: new Column(
@@ -107,23 +107,23 @@ class NewsItemCard extends StatelessWidget {
                 ),
               ),
               // share, explore buttons
-              new ButtonTheme.bar(
-                child: new ButtonBar(
-                  alignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    new FlatButton(
-                      child: const Text('SHARE'),
-                      textColor: theme.buttonColor,
-                      onPressed: () { /* do nothing */ },
-                    ),
-                    new FlatButton(
-                      child: const Text('EXPLORE'),
-                      textColor: theme.buttonColor,
-                      onPressed: () { /* do nothing */ },
-                    ),
-                  ],
-                ),
-              ),
+//              new ButtonTheme.bar(
+//                child: new ButtonBar(
+//                  alignment: MainAxisAlignment.start,
+//                  children: <Widget>[
+//                    new FlatButton(
+//                      child: const Text('SHARE'),
+//                      textColor: theme.buttonColor,
+//                      onPressed: () { /* do nothing */ },
+//                    ),
+//                    new FlatButton(
+//                      child: const Text('EXPLORE'),
+//                      textColor: theme.buttonColor,
+//                      onPressed: () { /* do nothing */ },
+//                    ),
+//                  ],
+//                ),
+//              ),
             ],
           ),
         ),

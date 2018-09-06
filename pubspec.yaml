@@ -18,6 +18,7 @@ dependencies:
   image_cropper: '^0.0.6'
   firebase_storage: '^1.0.2'
   flutter_cupertino_date_picker: '^0.0.5'
+  firebase_messaging: '^2.0.0'
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:usdsa_proto/UserSingleton.dart';
 import 'package:usdsa_proto/flutter_calendar_mod/flutter_calendar.dart';
 
 
@@ -22,6 +23,7 @@ class eventItem{
   //bool get isValid => groupIconURL != null && groupName != null && description != null;
 }
 class activityCalendarBuilder extends StatefulWidget {
+
   @override
   _activityCalendarState createState() => new _activityCalendarState();
 }
@@ -29,6 +31,8 @@ class activityCalendarBuilder extends StatefulWidget {
 class _activityCalendarState extends State<activityCalendarBuilder> {
   DateTime selectedDate = new DateTime.now();
   List<eventItem> dayevents = new List<eventItem>();
+  UserSingleton userSing = new UserSingleton();
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +76,6 @@ class _activityCalendarState extends State<activityCalendarBuilder> {
 
   deleteEvent(eventItem eventTBD){
     final ios = Theme.of(context).platform == TargetPlatform.iOS;
-
     showDialog(context: context, builder: (BuildContext context){
       if(!ios){
         return new AlertDialog(
@@ -165,6 +168,7 @@ class _activityCalendarState extends State<activityCalendarBuilder> {
 List<Widget> eventCardBuilder(){
   final ThemeData theme = Theme.of(context);
   final TextStyle descriptionStyle = theme.textTheme.subhead;
+
     List<Widget> eventCards = new List();
     dayevents.forEach((event){
       eventCards.add(
@@ -193,7 +197,7 @@ List<Widget> eventCardBuilder(){
                 ),
               ),
               new Container(
-                child: new IconButton(icon: Icon(Icons.delete), onPressed: () => deleteEvent(event)),
+                child: userSing.userPriority == '2' ? new IconButton(icon: Icon(Icons.delete), onPressed: () => deleteEvent(event)) : null,
               ),
             ],
           ),

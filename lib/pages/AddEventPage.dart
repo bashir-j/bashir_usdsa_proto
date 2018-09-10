@@ -179,10 +179,10 @@ class _AddEventPageState extends State<AddEventPage>{
                           dataDocMap["days"] = newDays;
                         }
 
-                        Firestore.instance.collection('events')
+                        await Firestore.instance.collection('events')
                             .document(selectedDate.month.toString() + '-' + selectedDate.year.toString())
                             .setData(dataDocMap);
-                        Firestore.instance.collection('events')
+                        await Firestore.instance.collection('events')
                             .document(selectedDate.month.toString() + '-' + selectedDate.year.toString())
                             .collection(selectedDate.day.toString())
                             .document()

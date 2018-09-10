@@ -1,4 +1,6 @@
 
+import 'package:usdsa_proto/GroupItem.dart';
+
 class UserSingleton {
   static final UserSingleton singleton = new UserSingleton._internal();
   String userID;
@@ -7,6 +9,7 @@ class UserSingleton {
   String userPriority;
   String userName;
   List<String> userCommittees;
+  List<GroupItem> userCommitteesItems;
   factory UserSingleton() {
     return singleton;
   }

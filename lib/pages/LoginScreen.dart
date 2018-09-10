@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:usdsa_proto/GroupItem.dart';
 import 'usdsaApp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:usdsa_proto/UserSingleton.dart';
@@ -128,12 +129,28 @@ class _loginScreenState extends State<loginScreen>{
                                     .document(user.uid)
                                     .get();
                                 userSing.userPriority = ds['priority'];
+                                userSing.userCommittees = new List<String>.from(ds['rCommittees']);
                                 //handleFCM(user.uid);
                                 Navigator.pushReplacement(
                                   context,
                                   new MaterialPageRoute(
                                       builder: (context) => new usdsaApp()),
                                 );
+                                userSing.userCommitteesItems = new List<GroupItem>();
+                                userSing.userCommittees.forEach((cName)async {
+                                  DocumentSnapshot cds = await Firestore.instance
+                                      .collection('committees')
+                                      .document(cName)
+                                      .get();
+                                  userSing.userCommitteesItems.add(
+                                    new GroupItem(
+                                      groupName: cds['name'],
+                                      description: cds['description'],
+                                      groupIconURL: cds['iconUrl'],
+                                      password: cds['password'],
+                                    )
+                                  );
+                                });
                               });
                             }
                           }

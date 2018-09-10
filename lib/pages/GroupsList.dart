@@ -1,21 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:usdsa_proto/GroupItem.dart';
 import 'GroupOptionsPage.dart';
+import 'package:usdsa_proto/UserSingleton.dart';
 
-class GroupItem{
-  const GroupItem({
-    this.groupIconURL,
-    this.groupName,
-    this.description,
-  });
 
-  final String groupIconURL;
-  final String groupName;
-  final String description;
 
-  bool get isValid => groupIconURL != null && groupName != null && description != null;
-}
 
 class GroupItemCard extends StatelessWidget{
   GroupItemCard({ Key key, @required this.groupItem })
@@ -32,51 +24,62 @@ class GroupItemCard extends StatelessWidget{
 
     return new Container(
       height: height,
-      child: new Card(
-        child: new Row(
-          children: <Widget>[
-            new Container(
-              padding: const EdgeInsets.all(8.0),
-              width: 85.0,
-              height: 85.0,
-              child: new ClipOval(
-                child: new FadeInImage.assetNetwork(
-                    //fit: BoxFit.fill,
-                    placeholder: 'images/placeholderSquare.png',
-                    image: groupItem.groupIconURL
+      child: GestureDetector(
+        onTap: (){
+          Navigator.of(context).push(
+            new MaterialPageRoute(builder: (context) => new GroupPage(groupItem: groupItem)),
+          );
+        },
+        child: new Card(
+          child: new Row(
+            children: <Widget>[
+              new Container(
+                padding: const EdgeInsets.all(8.0),
+                width: 85.0,
+                height: 85.0,
+                child: new ClipOval(
+                  child: CachedNetworkImage(
+                      imageUrl: groupItem.groupIconURL,
+                      placeholder: Image.asset('images/placeholderSquare.png'),
                   ),
+//                  child: new FadeInImage(
+//                      //fit: BoxFit.fill,
+//                      placeholder: 'images/placeholderSquare.png',
+//                      image: new CachedNetworkImageProvider(groupItem.groupIconURL )
+//                    ),
+                ),
               ),
-            ),
-            new Expanded(
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: new Text(
-                      groupItem.groupName,
-                      style: titleStyle,
+              new Expanded(
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: new Text(
+                        groupItem.groupName,
+                        style: titleStyle,
+                      ),
                     ),
-                  ),
-                  new Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0, top: 4.0),
-                    child: new Text(
-                      groupItem.description, //MAX 51 Chars
-                      style: descriptionStyle,
+                    new Padding(
+                      padding: const EdgeInsets.only(bottom: 4.0, top: 4.0),
+                      child: new Text(
+                        groupItem.description, //MAX 51 Chars
+                        style: descriptionStyle,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            new IconButton(
-                icon: new Icon(Icons.chevron_right),
-                onPressed: (){
-                  Navigator.of(context).push(
-                    new MaterialPageRoute(builder: (context) => new GroupPage(groupItem: groupItem)),
-                  );
-                }
-            )
-          ],
+              new IconButton(
+                  icon: new Icon(Icons.chevron_right),
+                  onPressed: (){
+                    Navigator.of(context).push(
+                      new MaterialPageRoute(builder: (context) => new GroupPage(groupItem: groupItem)),
+                    );
+                  }
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -92,6 +95,7 @@ class groupsListBuilder extends StatefulWidget {
 }
 
 class _groupsListState extends State<groupsListBuilder>{
+  UserSingleton userSing = new UserSingleton();
   @override
   Widget build(BuildContext context) {
     return new Scrollbar(
@@ -103,7 +107,7 @@ class _groupsListState extends State<groupsListBuilder>{
   }
 
   List <Widget> _getItems(){
-    return groupsList.map((GroupItem groupItem) {
+    return userSing.userCommitteesItems.map((GroupItem groupItem) {
       return new Container(
         margin: const EdgeInsets.only(bottom: 8.0),
         child: new GroupItemCard(

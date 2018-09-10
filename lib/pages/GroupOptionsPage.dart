@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:usdsa_proto/GroupItem.dart';
 import 'GroupsList.dart';
 import 'CustomNewsStream.dart';
 import '../group_options_icons_icons.dart';

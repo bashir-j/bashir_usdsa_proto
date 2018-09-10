@@ -23,7 +23,8 @@ class eventItem{
   //bool get isValid => groupIconURL != null && groupName != null && description != null;
 }
 class activityCalendarBuilder extends StatefulWidget {
-
+  activityCalendarBuilder({@required this.now});
+  DateTime now;
   @override
   _activityCalendarState createState() => new _activityCalendarState();
 }
@@ -32,10 +33,10 @@ class _activityCalendarState extends State<activityCalendarBuilder> {
   DateTime selectedDate = new DateTime.now();
   List<eventItem> dayevents = new List<eventItem>();
   UserSingleton userSing = new UserSingleton();
-
-
+  bool fetchingDayevents = false;
   @override
   Widget build(BuildContext context) {
+    //widget.reloader = true;
     return new Column(
       children: <Widget>[
         new Calendar(
@@ -43,24 +44,29 @@ class _activityCalendarState extends State<activityCalendarBuilder> {
           onDateSelected: (newSelectedDate) async {
             List<eventItem> tempdayevents = new List<eventItem>();
             dayevents.clear();
+            fetchingDayevents = true;
             String newMonth = newSelectedDate.month.toString();
             String newYear = newSelectedDate.year.toString();
             String newDay = newSelectedDate.day.toString();
-            Firestore.instance.collection('events').document(newMonth + '-' + newYear).collection(newDay).getDocuments()
-                .then((value){
-              value.documents.forEach((eventSnapshot){
+            Firestore.instance.collection('events').document(
+                newMonth + '-' + newYear).collection(newDay).getDocuments()
+                .then((value) {
+              value.documents.forEach((eventSnapshot) {
                 eventItem tempEvent = new eventItem(
-                  collectionRef: Firestore.instance.collection('events').document(newMonth + '-' + newYear).collection(newDay).reference(),
+                  collectionRef: Firestore.instance.collection('events')
+                      .document(newMonth + '-' + newYear).collection(newDay)
+                      .reference(),
                   eventRef: eventSnapshot.reference,
                   title: eventSnapshot['title'],
                   committeeName: eventSnapshot['name'],
                   date: newSelectedDate,
                 );
                 tempdayevents.add(tempEvent);
-                setState(() {
-                  dayevents = tempdayevents;
-                });
                 print(tempEvent);
+              });
+              setState(() {
+                dayevents = tempdayevents;
+                fetchingDayevents = false;
               });
             });
             setState(() {
@@ -69,9 +75,10 @@ class _activityCalendarState extends State<activityCalendarBuilder> {
           },
         ),
         new Expanded(child: _eventHolderBuilder())
-
       ],
     );
+
+
   }
 
   deleteEvent(eventItem eventTBD){
@@ -112,7 +119,8 @@ class _activityCalendarState extends State<activityCalendarBuilder> {
               });
               Navigator.of(context).pop();
             },
-            child: new Text("Delete")
+            child: new Text("Delete"),
+            textColor: Colors.red,
             ),
           ],
         );
@@ -210,9 +218,14 @@ List<Widget> eventCardBuilder(){
 Widget _eventHolderBuilder(){
   final ThemeData theme = Theme.of(context);
   final TextStyle descriptionStyle = theme.textTheme.subhead;
-    if(dayevents.isEmpty) {
+    if(dayevents.isEmpty && !fetchingDayevents) {
       return new Center(
         child: new Text("No Events",style: descriptionStyle.copyWith(color: Colors.black, fontSize: 24.0),),
+      );
+    }
+    else if(dayevents.isEmpty && fetchingDayevents){
+      return new Center(
+        child: new CircularProgressIndicator(),
       );
     }
     else{

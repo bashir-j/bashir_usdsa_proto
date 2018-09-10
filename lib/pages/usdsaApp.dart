@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:usdsa_proto/pages/AddEventPage.dart';
+import 'package:usdsa_proto/pages/AddNewCommitteePage.dart';
 import '../theme.dart';
 import 'NewsStream.dart';
 import 'ActivityCalendar.dart';
@@ -33,7 +34,7 @@ class usdsaAppState extends State<usdsaApp>{
   int _currentIndex = 0;
   UserSingleton userSing = new UserSingleton();
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
-
+  DateTime timeNOW = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -46,7 +47,14 @@ class usdsaAppState extends State<usdsaApp>{
 
   Scaffold scaffoldCreator(){
     _firebaseMessaging.requestNotificationPermissions();
-    _firebaseMessaging.subscribeToTopic("announcements");
+    _firebaseMessaging.subscribeToTopic("/topics/announcements");
+    _firebaseMessaging.getToken().catchError((error){
+      print(error.toString());
+      return true;
+    }).then((token){
+      print("hi");
+      print(token);
+    });
 
     return new Scaffold(
       appBar: new AppBar(
@@ -100,7 +108,11 @@ class usdsaAppState extends State<usdsaApp>{
               Navigator.push(
                 context,
                 new MaterialPageRoute(builder: (context) => new AddEventPage()),
-              );
+              ).then((val){
+                setState(() {
+                  timeNOW = DateTime.now();
+                });
+              });
             }),
           ];
         }
@@ -111,8 +123,12 @@ class usdsaAppState extends State<usdsaApp>{
       break;
       case 2:{
         return <Widget>[
-          new IconButton(icon: Icon(Icons.add), onPressed: null),
-          new IconButton(icon: Icon(Icons.camera_enhance), onPressed: null)
+          new IconButton(icon: Icon(Icons.edit), onPressed: (){
+            Navigator.push(
+              context,
+              new MaterialPageRoute(builder: (context) => new AddNewCommitteePage()),
+            );
+          }),
         ];
       }
       break;
@@ -149,14 +165,14 @@ class usdsaAppState extends State<usdsaApp>{
   }
 
   Widget screenChoser(){
-
     switch(_currentIndex){
       case 0:{
         return new newsStreamBuilder();
       }
       break;
       case 1: {
-        return new activityCalendarBuilder();
+        print(timeNOW);
+        return new activityCalendarBuilder(now: timeNOW,);
       }
       break;
       case 2: {

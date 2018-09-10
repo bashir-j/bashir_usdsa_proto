@@ -28,7 +28,7 @@ class Calendar extends StatefulWidget {
     this.showTodayAction: true,
     this.showChevronsToChangeRange: true,
     this.showCalendarPickerIcon: true,
-    this.initialCalendarDateOverride
+    this.initialCalendarDateOverride,
   });
 
   @override
@@ -65,7 +65,9 @@ class _CalendarState extends State<Calendar> {
         .sublist(0, 7);
     _selectedDate = today;
     displayMonth = Utils.formatMonth(Utils.firstDayOfWeek(today));
+    widget.onDateSelected(_selectedDate);
     AsyncCalendarBuilder();
+
   }
 
   Widget get nameAndIconRow {
@@ -176,7 +178,6 @@ class _CalendarState extends State<Calendar> {
 
     for(CalendarTile tile in newDayWidgets){
       if(!tile.isDayOfWeek) {
-
         tempDays.add(
             new CalendarTile(
               onDateSelected: tile.onDateSelected,

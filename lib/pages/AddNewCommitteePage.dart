@@ -157,11 +157,13 @@ class GroupItemCard extends StatelessWidget{
                     } else {
                       return new CupertinoAlertDialog(
                           title: new Text("Enter Committee Password"),
-                          content: new TextField(
-                            decoration: null,
-                            onChanged: (String text) {
-                              enteredPass = text;
-                            },
+                          content: Card(
+                            elevation: 0.0,
+                            child: new TextField(
+                              onChanged: (String text) {
+                                enteredPass = text;
+                              },
+                            ),
                           ),
                           actions: <Widget>[
                             new CupertinoDialogAction(onPressed: (){

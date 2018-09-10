@@ -155,43 +155,45 @@ class GroupItemCard extends StatelessWidget{
                         ]
                       );
                     } else {
-                      return new CupertinoAlertDialog(
-                          title: new Text("Enter Committee Password"),
-                          content: new TextField(
-                            onChanged: (String text) {
-                              enteredPass = text;
-                            },
-                          ),
-                          actions: <Widget>[
-                            new CupertinoDialogAction(onPressed: (){
-                              Navigator.of(context).pop();
-                            },
-                                child: new Text("Cancel")
+                      return CupertinoDialog(
+                        child: new CupertinoAlertDialog(
+                            title: new Text("Enter Committee Password"),
+                            content: new TextField(
+                              onChanged: (String text) {
+                                enteredPass = text;
+                              },
                             ),
-                            new CupertinoDialogAction(onPressed: (){
-                              if(enteredPass == groupItem.password){
-                                addCommitteee(context);
-                              }else{
+                            actions: <Widget>[
+                              new CupertinoDialogAction(onPressed: (){
                                 Navigator.of(context).pop();
-                                showDialog(context: context, builder: (BuildContext context){
-                                  return new CupertinoAlertDialog(
-                                    title: new Text("Incorrect Password Entered"),
-                                    content: new Text("Please make sure the password is correct and try again"),
-                                    actions: <Widget>[
-                                      new CupertinoDialogAction(onPressed: (){
-                                        Navigator.of(context).pop();
-                                      },
-                                          child: new Text("Dismiss")
-                                      ),
-                                    ],
-                                  );
-                                });
-                              }
-                            },
-                                child: new Text("Submit"),
-                              isDefaultAction: true,
-                            ),
-                          ]
+                              },
+                                  child: new Text("Cancel")
+                              ),
+                              new CupertinoDialogAction(onPressed: (){
+                                if(enteredPass == groupItem.password){
+                                  addCommitteee(context);
+                                }else{
+                                  Navigator.of(context).pop();
+                                  showDialog(context: context, builder: (BuildContext context){
+                                    return new CupertinoAlertDialog(
+                                      title: new Text("Incorrect Password Entered"),
+                                      content: new Text("Please make sure the password is correct and try again"),
+                                      actions: <Widget>[
+                                        new CupertinoDialogAction(onPressed: (){
+                                          Navigator.of(context).pop();
+                                        },
+                                            child: new Text("Dismiss")
+                                        ),
+                                      ],
+                                    );
+                                  });
+                                }
+                              },
+                                  child: new Text("Submit"),
+                                isDefaultAction: true,
+                              ),
+                            ]
+                        ),
                       );
                     }
                   });

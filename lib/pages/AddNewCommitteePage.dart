@@ -155,7 +155,7 @@ class GroupItemCard extends StatelessWidget{
                         ]
                       );
                     } else {
-                      return CupertinoDialog(
+                      return Material(
                         child: new CupertinoAlertDialog(
                             title: new Text("Enter Committee Password"),
                             content: new TextField(

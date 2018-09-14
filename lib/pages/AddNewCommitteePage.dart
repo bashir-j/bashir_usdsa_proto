@@ -218,8 +218,14 @@ class GroupItemCard extends StatelessWidget{
         }
     );
     Map<String, dynamic> dataMap = new Map<String, dynamic>();
+    Map<String, dynamic> usersDataMap = new Map<String, dynamic>();
     userSing.userCommittees.remove(groupItem.groupName);
+    groupItem.jUsers.remove(userSing.userID);
     dataMap['rCommittees'] = userSing.userCommittees;
+    usersDataMap['jUsers'] = groupItem.jUsers;
+    await Firestore.instance.collection('committees')
+        .document(groupItem.groupName)
+        .setData(usersDataMap, merge: true);
     await Firestore.instance.collection('users')
         .document(userSing.userID)
         .setData(dataMap, merge: true);
@@ -241,21 +247,29 @@ class GroupItemCard extends StatelessWidget{
         }
     );
     Map<String, dynamic> dataMap = new Map<String, dynamic>();
+    Map<String, dynamic> usersDataMap = new Map<String, dynamic>();
     userSing.userCommittees.add(groupItem.groupName);
+    groupItem.jUsers.add(userSing.userID);
     dataMap['rCommittees'] = userSing.userCommittees;
+    usersDataMap['jUsers'] = groupItem.jUsers;
     await Firestore.instance.collection('users')
         .document(userSing.userID)
         .setData(dataMap, merge: true);
+    await Firestore.instance.collection('committees')
+        .document(groupItem.groupName)
+        .setData(usersDataMap, merge: true);
     DocumentSnapshot cds = await Firestore.instance
         .collection('committees')
         .document(groupItem.groupName)
         .get();
+    List<String> jUsers = new List<String>.from(cds['jUsers']);
     userSing.userCommitteesItems.add(
         new GroupItem(
           groupName: cds['name'],
           description: cds['description'],
           groupIconURL: cds['iconUrl'],
           password: cds['password'],
+          jUsers: jUsers,
         )
     );
     Navigator.pop(context);
@@ -292,11 +306,13 @@ class _AddCommitteePageState extends State<AddNewCommitteePage>{
                       padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                       itemBuilder: (context, index){
                         DocumentSnapshot ds = snapshot.data.documents[index];
+                        List<String> jUsers = new List<String>.from(ds['jUsers']);
                         GroupItem snapshotToItem = new GroupItem(
                             groupName: ds['name'],
                             groupIconURL: ds['iconUrl'],
                             description: ds['description'],
                             password: ds['password'],
+                            jUsers: jUsers,
                         );
                         bool reg = userSing.userCommittees.contains(snapshotToItem.groupName);
                         return new Container(

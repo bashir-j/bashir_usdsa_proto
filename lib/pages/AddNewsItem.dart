@@ -15,6 +15,9 @@ import 'package:usdsa_proto/EnsureVisWhileFocused.dart';
 
 
 class AddNewsItemPage extends StatefulWidget{
+
+
+
   @override
   _AddNewsItemPageState createState() => new _AddNewsItemPageState();
 }
@@ -41,22 +44,14 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
     final Uri downloadUrl = (await uploadTask.future).downloadUrl;
 
     dataMap["newsImgUrl"] = downloadUrl.toString();
+    await Future.delayed(Duration(seconds: 2));
     setState(() {
       Firestore.instance.collection('announcements').document().setData(dataMap);
       Navigator.pop(context);
       Navigator.pop(context);
     });
   }
-//  Future<Null> showLoading() async{
-//    await showDialog(context: context,
-//    builder: (BuildContext context){
-//      return new SimpleDialog(
-//        children: <Widget>[
-//          new CircularProgressIndicator()
-//        ],
-//      );
-//    });
-//  }
+
   Future getImage() async {
     var imagePreCrop = await ImagePicker.pickImage(source: ImageSource.gallery);
     var image = await ImageCropper.cropImage(
@@ -135,29 +130,7 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
                         ],
                       ),
                     ),
-//                  Padding(
-//                    padding: const EdgeInsets.only(bottom: 16.0),
-//                    child: new TextFormField(
-//                      decoration: InputDecoration(
-//                        border: OutlineInputBorder(
-//                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-//                        ),
-//                        labelStyle: titleStyle,
-//                        isDense: false,
-//                        labelText: "Image URL",
-//                        hintText: "Enter Image URL Here",
-//                      ),
-//
-//                      validator: (value){
-//                        if (value.isEmpty) {
-//                          return 'Please enter some text';
-//                        }
-//                      },
-//                      onSaved: (value){
-//                        imgurl = value;
-//                      },
-//                    ),
-//                  ),
+
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
                       child: new EnsureVisibleWhenFocused(

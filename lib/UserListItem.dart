@@ -13,5 +13,4 @@ class GroupItem{
   final String password;
   final List<String> jUsers;
 
-  bool get isValid => groupIconURL != null && groupName != null && description != null;
 }

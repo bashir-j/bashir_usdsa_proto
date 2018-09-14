@@ -142,12 +142,14 @@ class _loginScreenState extends State<loginScreen>{
                                       .collection('committees')
                                       .document(cName)
                                       .get();
+                                  List<String> jUsers = new List<String>.from(cds['jUsers']);
                                   userSing.userCommitteesItems.add(
                                     new GroupItem(
                                       groupName: cds['name'],
                                       description: cds['description'],
                                       groupIconURL: cds['iconUrl'],
                                       password: cds['password'],
+                                      jUsers: jUsers,
                                     )
                                   );
                                 });

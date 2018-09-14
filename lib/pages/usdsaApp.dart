@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        title: "USDSA App",
+        title: "USDSA",
         home: new loginScreen(),
         theme: mainTheme,
     );
@@ -37,11 +37,7 @@ class usdsaAppState extends State<usdsaApp>{
   DateTime timeNOW = DateTime.now();
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: "USDSA",
-      home: scaffoldCreator(),
-      theme: mainTheme,
-    );
+    return scaffoldCreator();
   }
 
 

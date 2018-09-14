@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:usdsa_proto/GroupItem.dart';
+import 'package:usdsa_proto/pages/MeetingsListPage.dart';
 import 'GroupsList.dart';
 import 'CustomNewsStream.dart';
 import '../group_options_icons_icons.dart';
@@ -20,12 +21,13 @@ class GroupOption{
 }
 
 class GroupOptionItemCard extends StatelessWidget{
-  GroupOptionItemCard({ Key key, @required this.groupOption, @required this.groupItemName })
+  GroupOptionItemCard({ Key key, @required this.groupOption, @required this.groupItemName, this.jUsers })
       : assert(groupOption != null && groupOption.isValid && groupItemName != null),
         super(key: key);
 
   final GroupOption groupOption;
   final String groupItemName;
+  final List<String> jUsers;
 
   static const double height = 110.0;
   @override
@@ -35,54 +37,75 @@ class GroupOptionItemCard extends StatelessWidget{
     final TextStyle descriptionStyle = theme.textTheme.subhead;
     return new Container(
       height: height,
-      child: new Card(
-        child: new Row(
-          children: <Widget>[
-            new Container(
-              padding: const EdgeInsets.only(left: 8.0, right: 32.0, top: 4.0 ,bottom: 4.0),
-              child: new Icon(groupOption.optionIcon, size: 85.0,),
-            ),
-            new Expanded(
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: new Text(
-                      groupOption.optionName,
-                      style: titleStyle,
-                    ),
-                  ),
-                  new Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0, top: 4.0),
-                    child: new Text(
-                      groupOption.description, //MAX 51 Chars
-                      style: descriptionStyle,
-                    ),
-                  ),
-                ],
+      child: GestureDetector(
+        onTap: (){
+          if(groupOption == groupsOptionsList[0]){
+            Navigator.push(
+              context,
+              new MaterialPageRoute(builder: (context) => new customNewsStreamBuilder(committeeName: groupItemName)),
+            );
+          }else if (groupOption == groupsOptionsList[1]){
+            Navigator.push(
+              context,
+              new MaterialPageRoute(builder: (context) => new meetingsList(committeeName: groupItemName, jUsers: jUsers)),
+            );
+          }
+          else if (groupOption == groupsOptionsList[2]){
+
+          }
+          else{
+
+          }
+        },
+        child: new Card(
+          child: new Row(
+            children: <Widget>[
+              new Container(
+                padding: const EdgeInsets.only(left: 8.0, right: 32.0, top: 4.0 ,bottom: 4.0),
+                child: new Icon(groupOption.optionIcon, size: 85.0,),
               ),
-            ),
-            new IconButton(
-                icon: new Icon(Icons.chevron_right),
-                onPressed: (){
-                  if(groupOption == groupsOptionsList[0]){
-                    Navigator.push(
-                      context,
-                      new MaterialPageRoute(builder: (context) => new customNewsStreamBuilder(committeeName: groupItemName)),
-                    );
-                  }else if (groupOption == groupsOptionsList[1]){
+              new Expanded(
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: new Text(
+                        groupOption.optionName,
+                        style: titleStyle,
+                      ),
+                    ),
+                    new Padding(
+                      padding: const EdgeInsets.only(bottom: 4.0, top: 4.0),
+                      child: new Text(
+                        groupOption.description, //MAX 51 Chars
+                        style: descriptionStyle,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              new IconButton(
+                  icon: new Icon(Icons.chevron_right),
+                  onPressed: (){
+                    if(groupOption == groupsOptionsList[0]){
+                      Navigator.push(
+                        context,
+                        new MaterialPageRoute(builder: (context) => new customNewsStreamBuilder(committeeName: groupItemName)),
+                      );
+                    }else if (groupOption == groupsOptionsList[1]){
 
-                  }
-                  else if (groupOption == groupsOptionsList[2]){
+                    }
+                    else if (groupOption == groupsOptionsList[2]){
 
-                  }
-                  else{
+                    }
+                    else{
 
+                    }
                   }
-                }
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -93,12 +116,12 @@ class GroupOptionItemCard extends StatelessWidget{
 
 
 class _groupOptionsBuilder extends StatelessWidget{
-  _groupOptionsBuilder({ Key key, @required this.groupItemName })
+  _groupOptionsBuilder({ Key key, @required this.groupItemName, this.jUsers})
       : assert(groupItemName != null),
         super(key: key);
 
   final String groupItemName;
-
+  final List<String> jUsers;
   @override
   Widget build(BuildContext context) {
     return new Scrollbar(
@@ -116,6 +139,7 @@ class _groupOptionsBuilder extends StatelessWidget{
         child: new GroupOptionItemCard(
           groupOption: groupOption,
           groupItemName: groupItemName,
+          jUsers: jUsers,
         ),
       );
     }).toList();
@@ -168,7 +192,7 @@ class _GroupPageState extends State<GroupPage> {
         ),
 
       ),
-      body: new _groupOptionsBuilder(groupItemName: widget.groupItem.groupName,),
+      body: new _groupOptionsBuilder(groupItemName: widget.groupItem.groupName, jUsers: widget.groupItem.jUsers,),
     );
   }
 }

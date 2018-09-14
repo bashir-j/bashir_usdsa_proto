@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:usdsa_proto/UserSingleton.dart';
 import 'CustomAddNewsItem.dart';
 
 class NewsItem {
@@ -141,7 +142,7 @@ class customNewsStreamBuilder extends StatefulWidget{
 
 class _customNewsStreamState extends State<customNewsStreamBuilder>{
   //List<NewsItem> newsItemsVar = newsItems;
-
+  UserSingleton userSing = new UserSingleton();
   @override
   Widget build(BuildContext context) {
 
@@ -149,14 +150,14 @@ class _customNewsStreamState extends State<customNewsStreamBuilder>{
       appBar: new AppBar(
         titleSpacing: 0.0,
         title: new Text("Announcements",overflow: TextOverflow.fade),
-        actions: <Widget>[
+        actions: userSing.userPriority == '2' ? <Widget>[
           new IconButton(icon: Icon(Icons.add), onPressed: (){
             Navigator.push(
               context,
               new MaterialPageRoute(builder: (context) => new CustomAddNewsItemPage(committeeName: widget.committeeName,)),
             );
           }),
-        ],
+        ] : null,
       ),
       body: new StreamBuilder(
           stream: Firestore.instance.collection('committees').document(widget.committeeName).collection('announcements').orderBy("date", descending: true).snapshots(),

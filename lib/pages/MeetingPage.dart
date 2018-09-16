@@ -63,6 +63,7 @@ class _meetingPageState extends State<MeetingPage> {
           top: false,
           bottom: false,
           child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
             children :<Widget>[
               Container(
               padding: EdgeInsets.all(16.0),
@@ -133,6 +134,10 @@ class _meetingPageState extends State<MeetingPage> {
                 ],
               ),
             ),
+              Container(
+                padding: EdgeInsets.only(left: 16.0, bottom: 4.0),
+                child: new Text("Attendees", style: titleStyle,),
+              ),
             new StreamBuilder(
                 stream: Firestore.instance.collection('users').snapshots(),
                 builder: (context, snapshot) {
@@ -149,8 +154,10 @@ class _meetingPageState extends State<MeetingPage> {
                                 bool uAttended = widget.meetingItem.aUsers.contains(ds.documentID);
                                 return ListTile(
                                   leading: uAttended ? Icon(Icons.check_box, color: theme.primaryColor,) : Icon(Icons.check_box_outline_blank, color: theme.primaryColor,),
-                                  title: new Text(ds.documentID),
+                                  title: new Text(ds['name']),
                                 );
+                              }else{
+                                return null;
                               }
                             }
                         )
@@ -158,6 +165,7 @@ class _meetingPageState extends State<MeetingPage> {
                   );
                 }
             ),
+
             ]
           ),
         ),

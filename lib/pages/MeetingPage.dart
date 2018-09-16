@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:usdsa_proto/UserSingleton.dart';
 //import 'package:qrcode_reader/QRCodeReader.dart';
+//import 'package:qr_mobile_vision/qr_mobile_vision.dart';
+import 'package:qr_reader/qr_reader.dart';
+import 'package:usdsa_proto/q_r_code_icons_icons.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class MeetingItem{
   const MeetingItem({
@@ -57,7 +61,10 @@ class _meetingPageState extends State<MeetingPage> {
     final TextStyle subStyle = theme.textTheme.body1.copyWith(fontSize: 22.0);
     return new Scaffold(
         appBar: new AppBar(
-        title: Text(widget.meetingItem.title),
+        title: Text(widget.meetingItem.title), 
+        actions: userSing.userPriority == '2' ? <Widget>[
+          new IconButton(icon: Icon(QRCodeIcons.qrcode), onPressed: () => showQRDialog())
+        ] : null,
         ),
         body: new SafeArea(
           top: false,
@@ -123,7 +130,7 @@ class _meetingPageState extends State<MeetingPage> {
                       children: <Widget>[
                         new Text("Attend Meeting", style: titleStyle,),
                         new IconButton(
-                            icon: Icon(Icons.camera_enhance),
+                            icon: Icon(QRCodeIcons.qr_scan, size: 52.0,),
                             onPressed: (){
                               attendMeeting();
                             },
@@ -172,22 +179,46 @@ class _meetingPageState extends State<MeetingPage> {
     );
   }
 
-
+  showQRDialog(){
+    showDialog(context: context,
+        barrierDismissible: true,
+        builder: (context){
+          return Center(
+            child: Container(
+              width: 210.0,
+              height: 210.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+              ),
+              child: new QrImage(
+                data: widget.meetingItem.meetingID,
+                size: 200.0,
+              ),
+            ),
+          );
+        }
+    );
+  }
   attendMeeting()async {
       //String futureString = await new QRCodeReader().scan();
-    Map<String, dynamic> dataMap = new Map<String, dynamic>();
-    widget.meetingItem.aUsers.add(userSing.userID);
-    dataMap['aUsers'] = widget.meetingItem.aUsers;
+    String futureString = await QRCodeReader().scan();
+    print(futureString);
+    if(futureString == widget.meetingItem.meetingID){
+      Map<String, dynamic> dataMap = new Map<String, dynamic>();
+      widget.meetingItem.aUsers.add(userSing.userID);
+      dataMap['aUsers'] = widget.meetingItem.aUsers;
 
-    await Firestore.instance
-        .collection('committees')
-        .document(widget.meetingItem.committeeName)
-        .collection('meetings')
-        .document(widget.meetingItem.meetingID)
-        .setData(dataMap, merge: true);
-    setState(() {
-      dAttended = true;
-      //mID = futureString;
-    });
+      await Firestore.instance
+          .collection('committees')
+          .document(widget.meetingItem.committeeName)
+          .collection('meetings')
+          .document(widget.meetingItem.meetingID)
+          .setData(dataMap, merge: true);
+      setState(() {
+        dAttended = true;
+        //mID = futureString;
+      });
+    }
+
   }
 }

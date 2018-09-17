@@ -39,42 +39,46 @@ class _activityCalendarState extends State<activityCalendarBuilder> {
     //widget.reloader = true;
     return new Column(
       children: <Widget>[
-        new Calendar(
-          isExpandable: false,
-          onDateSelected: (newSelectedDate) async {
-            List<eventItem> tempdayevents = new List<eventItem>();
-            dayevents.clear();
-            fetchingDayevents = true;
-            String newMonth = newSelectedDate.month.toString();
-            String newYear = newSelectedDate.year.toString();
-            String newDay = newSelectedDate.day.toString();
-            Firestore.instance.collection('events').document(
-                newMonth + '-' + newYear).collection(newDay).getDocuments()
-                .then((value) {
-              value.documents.forEach((eventSnapshot) {
-                eventItem tempEvent = new eventItem(
-                  collectionRef: Firestore.instance.collection('events')
-                      .document(newMonth + '-' + newYear).collection(newDay)
-                      .reference(),
-                  eventRef: eventSnapshot.reference,
-                  title: eventSnapshot['title'],
-                  committeeName: eventSnapshot['name'],
-                  date: newSelectedDate,
-                );
-                tempdayevents.add(tempEvent);
-                print(tempEvent);
+        Expanded(
+          flex:0,
+          child: new Calendar(
+            isExpandable: false,
+            onDateSelected: (newSelectedDate) async {
+              List<eventItem> tempdayevents = new List<eventItem>();
+              dayevents.clear();
+              fetchingDayevents = true;
+              String newMonth = newSelectedDate.month.toString();
+              String newYear = newSelectedDate.year.toString();
+              String newDay = newSelectedDate.day.toString();
+              Firestore.instance.collection('events').document(
+                  newMonth + '-' + newYear).collection(newDay).getDocuments()
+                  .then((value) {
+                value.documents.forEach((eventSnapshot) {
+                  eventItem tempEvent = new eventItem(
+                    collectionRef: Firestore.instance.collection('events')
+                        .document(newMonth + '-' + newYear).collection(newDay)
+                        .reference(),
+                    eventRef: eventSnapshot.reference,
+                    title: eventSnapshot['title'],
+                    committeeName: eventSnapshot['name'],
+                    date: newSelectedDate,
+                  );
+                  tempdayevents.add(tempEvent);
+                  print(tempEvent);
+                });
+                setState(() {
+                  dayevents = tempdayevents;
+                  fetchingDayevents = false;
+                });
               });
               setState(() {
-                dayevents = tempdayevents;
-                fetchingDayevents = false;
+                selectedDate = newSelectedDate;
               });
-            });
-            setState(() {
-              selectedDate = newSelectedDate;
-            });
-          },
+            },
+          ),
         ),
-        new Expanded(child: _eventHolderBuilder())
+        new Flexible(
+            child: _eventHolderBuilder())
       ],
     );
 

@@ -201,7 +201,12 @@ class _CalendarState extends State<Calendar> {
     return tempDays;
   }
 
-
+//    List<Widget> calendarBuilder(){
+//      return <Widget>[
+//        new Text("hey"),
+//        new Text("hi"),
+//      ];
+//    }
   List<Widget> calendarBuilder() {
 
     List<Widget> dayWidgets = [];
@@ -366,12 +371,7 @@ class _CalendarState extends State<Calendar> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           nameAndIconRow,
-          new ExpansionCrossFade(
-            collapsed: new Text("hi"),
-            expanded: calendarGridView,
-            isExpanded: isExpanded,
-          ),
-          expansionButtonRow
+          calendarGridView,
         ],
       ),
     );

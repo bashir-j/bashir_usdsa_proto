@@ -44,6 +44,7 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
     final Uri downloadUrl = (await uploadTask.future).downloadUrl;
 
     dataMap["newsImgUrl"] = downloadUrl.toString();
+    dataMap["imgRef"] = "images/$fileName";
     await Future.delayed(Duration(seconds: 2));
     setState(() {
       Firestore.instance.collection('announcements').document().setData(dataMap);

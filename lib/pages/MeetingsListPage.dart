@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:usdsa_proto/UserSingleton.dart';
+import 'package:usdsa_proto/pages/AddMeetingPage.dart';
 import 'package:usdsa_proto/pages/MeetingPage.dart';
 
 class meetingsList extends StatefulWidget{
@@ -24,6 +25,14 @@ class _meetingsListState extends State<meetingsList>{
     return new Scaffold(
       appBar: new AppBar(
         title: Text("Committee Meetings"),
+        actions: userSing.userPriority == '2' ? <Widget>[
+          new IconButton(icon: Icon(Icons.add), onPressed: (){
+            Navigator.push(
+              context,
+              new MaterialPageRoute(builder: (context) => new AddMeetingPage(committeeName: widget.committeeName,)),
+            );
+          }),
+        ] : null,
       ),
       body: new SafeArea(
         top: false,

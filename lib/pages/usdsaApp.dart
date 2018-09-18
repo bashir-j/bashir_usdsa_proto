@@ -35,6 +35,30 @@ class usdsaAppState extends State<usdsaApp>{
   UserSingleton userSing = new UserSingleton();
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   DateTime timeNOW = DateTime.now();
+
+  @override
+  void initState() {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+      },
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+    _firebaseMessaging.subscribeToTopic("/topics/announcements");
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return scaffoldCreator();
@@ -42,16 +66,7 @@ class usdsaAppState extends State<usdsaApp>{
 
 
   Scaffold scaffoldCreator(){
-    _firebaseMessaging.requestNotificationPermissions();
-    _firebaseMessaging.subscribeToTopic("/topics/announcements");
-    _firebaseMessaging.getToken().catchError((error){
-      print(error.toString());
-      return true;
-    }).then((token){
-      print("hi");
-      print(token);
-    });
-
+    
     return new Scaffold(
       appBar: new AppBar(
         centerTitle: false,
@@ -185,6 +200,8 @@ class usdsaAppState extends State<usdsaApp>{
       break;
     }
   }
+
+
 }
 
 

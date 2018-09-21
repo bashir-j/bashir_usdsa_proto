@@ -145,7 +145,7 @@ class _customNewsStreamState extends State<customNewsStreamBuilder>{
   UserSingleton userSing = new UserSingleton();
   @override
   Widget build(BuildContext context) {
-
+    //TODO Align with main
     return Scaffold(
       appBar: new AppBar(
         titleSpacing: 0.0,

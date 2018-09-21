@@ -44,7 +44,7 @@ class _meetingsListState extends State<meetingsList>{
               return new Scrollbar(
                   child: new ListView.builder(
                       itemCount: snapshot.data.documents.length,
-                      itemExtent: 110.0,
+                      itemExtent: 75.0,
                       padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                       itemBuilder: (context, index){
                         DocumentSnapshot ds = snapshot.data.documents[index];

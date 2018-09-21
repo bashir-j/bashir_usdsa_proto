@@ -68,6 +68,7 @@ class _CustomAddNewsItemPageState extends State<CustomAddNewsItemPage>{
   }
   @override
   Widget build(BuildContext context) {
+    //TODO Align with main
     final ThemeData theme = Theme.of(context);
     final TextStyle titleStyle = theme.textTheme.headline.copyWith(color: Colors.black);
     final TextStyle subStyle = theme.textTheme.body1.copyWith(fontSize: 22.0);

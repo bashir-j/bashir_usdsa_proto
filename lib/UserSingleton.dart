@@ -7,7 +7,8 @@ class UserSingleton {
   String userEmail;
   String userPass;
   String userPriority;
-  String userName;
+  String userFName;
+  String userLName;
   List<String> userCommittees;
   List<GroupItem> userCommitteesItems;
   factory UserSingleton() {

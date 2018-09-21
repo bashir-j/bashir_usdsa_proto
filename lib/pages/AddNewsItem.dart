@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,7 +13,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as p;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:usdsa_proto/EnsureVisWhileFocused.dart';
-
+import 'package:http/http.dart';
 
 class AddNewsItemPage extends StatefulWidget{
 
@@ -45,7 +46,40 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
 
     dataMap["newsImgUrl"] = downloadUrl.toString();
     dataMap["imgRef"] = "images/$fileName";
-    await Future.delayed(Duration(seconds: 2));
+
+    String notifBody = dataMap["description"];
+//    if(notifBody.length > 60) {
+//      notifBody = notifBody.substring(0, 60);
+//      notifBody = notifBody + '...';
+//    }
+    Map<String, String> headers = {
+      'Content-type' : 'application/json',
+      'Authorization': 'key=AIzaSyC7GOT3cQ9CcyWctrvjUXgaYRBV1zXeg3E',
+    };
+    Map<String, String> notif = {
+      'sound': 'default',
+      'body' : notifBody,
+      'title': 'New Announcement Added',
+    };
+    Map<String, String> data = {
+      'click_action' : 'FLUTTER_NOTIFICATION_CLICK',
+      "id": "12",
+      "status": "done"
+    };
+    Map body = {
+      'notification' : notif,
+      'priority': 'high',
+      'data': data,
+      "to": "/topics/announcements"
+    };
+    var vBody = jsonEncode(body);
+    Response resp = await post(
+      Uri.encodeFull("https://fcm.googleapis.com/fcm/send"),
+      headers: headers,
+      body: vBody,
+    );
+    print(resp.body);
+
     setState(() {
       Firestore.instance.collection('announcements').document().setData(dataMap);
       Navigator.pop(context);

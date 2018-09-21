@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:usdsa_proto/pages/AddEventPage.dart';
 import 'package:usdsa_proto/pages/AddNewCommitteePage.dart';
+import 'package:usdsa_proto/pages/SettingsPage.dart';
 import '../theme.dart';
 import 'NewsStream.dart';
 import 'ActivityCalendar.dart';
@@ -55,6 +57,10 @@ class usdsaAppState extends State<usdsaApp>{
         .listen((IosNotificationSettings settings) {
       print("Settings registered: $settings");
     });
+    _firebaseMessaging.getToken().then((token){
+      print("token");
+      print(token);
+    });
     _firebaseMessaging.subscribeToTopic("/topics/announcements");
   }
 
@@ -66,7 +72,7 @@ class usdsaAppState extends State<usdsaApp>{
 
 
   Scaffold scaffoldCreator(){
-    
+
     return new Scaffold(
       appBar: new AppBar(
         centerTitle: false,
@@ -143,6 +149,22 @@ class usdsaAppState extends State<usdsaApp>{
         ];
       }
       break;
+      case 3:{
+        return <Widget>[
+          new IconButton(icon: Icon(Icons.exit_to_app), onPressed: (){
+            SharedPreferences.getInstance().then((prefs){
+              prefs.setBool('authed', null);
+              FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(
+                context,
+                new MaterialPageRoute(builder: (context) => new loginScreen()),
+              );
+            });
+
+          }),
+        ];
+      }
+      break;
       default: {
         return [];
       }
@@ -191,7 +213,7 @@ class usdsaAppState extends State<usdsaApp>{
       }
       break;
       case 3: {
-        return new Text("default error");
+        return new SettingPage();
       }
       break;
       default: {

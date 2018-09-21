@@ -4,9 +4,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:usdsa_proto/UserSingleton.dart';
+import 'dart:convert';
 
 class NewsItem {
   const NewsItem({
@@ -36,7 +38,7 @@ class NewsItemCard extends StatelessWidget {
 
   static const double height = 350.0;
   final NewsItem newsItem;
-  List<String> popupOptions = <String>["Delete"];
+  List<String> popupOptions = <String>["Send Notification","Delete"];
   TapDownDetails details;
   UserSingleton userSing = new UserSingleton();
   @override
@@ -162,8 +164,42 @@ class NewsItemCard extends StatelessWidget {
     );
     if (sel != null) {
       switch(sel){
-        case "Edit":{
+        case "Send Notification":{
+          String notifBody = newsItem.description;
+//          if(notifBody.length > 60) {
+//            notifBody = notifBody.substring(0, 60);
+//            notifBody = notifBody + '...';
+//          }
+
           print("edi");
+          Map<String, String> headers = {
+            'Content-type' : 'application/json',
+            'Authorization': 'key=AIzaSyC7GOT3cQ9CcyWctrvjUXgaYRBV1zXeg3E',
+          };
+          Map<String, String> notif = {
+            'sound': 'default',
+            'badge': '1',
+            'body' : notifBody,
+            'title': 'New Announcement Added',
+          };
+          Map<String, String> data = {
+            'click_action' : 'FLUTTER_NOTIFICATION_CLICK',
+            "id": "12",
+            "status": "done"
+          };
+          Map body = {
+            'notification' : notif,
+            'priority': 'high',
+            'data': data,
+            "to": "/topics/announcements"
+          };
+          var vBody = jsonEncode(body);
+          Response resp = await post(
+              Uri.encodeFull("https://fcm.googleapis.com/fcm/send"),
+              headers: headers,
+              body: vBody,
+          );
+          print(resp.body);
         }
         break;
         case "Delete":{

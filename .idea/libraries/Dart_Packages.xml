@@ -51,6 +51,13 @@
             </list>
           </value>
         </entry>
+        <entry key="cloud_functions">
+          <value>
+            <list>
+              <option value="$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_functions-0.0.4/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="collection">
           <value>
             <list>
@@ -559,6 +566,7 @@
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/cached_network_image-0.4.2/lib" />
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/charcode-1.1.2/lib" />
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.7.2/lib" />
+      <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_functions-0.0.4/lib" />
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.14.11/lib" />
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/convert-2.0.2/lib" />
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/crypto-2.0.6/lib" />

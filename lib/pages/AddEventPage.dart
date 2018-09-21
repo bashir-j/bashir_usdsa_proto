@@ -75,6 +75,11 @@ class _AddEventPageState extends State<AddEventPage>{
                           labelText: "Committee Name",
                           hintText: "Enter Committee Name Here"
                       ),
+                      validator: (value){
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
                       onSaved: (value){
                         committeeName = value;
                       },
@@ -147,48 +152,51 @@ class _AddEventPageState extends State<AddEventPage>{
                       child: new Text("Submit"),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
                       onPressed: ()async {
-                        showDialog(context: context,
-                            barrierDismissible: false,
-                            builder: (context){
-                              return Center(
-                                child: Container(child: new CircularProgressIndicator()
-                                ),
-                              );
-                            }
-                        );
                         final FormState form = _formKey.currentState;
-                        form.save();
-                        Map<String, dynamic> dataMap = new Map<String, dynamic>();
-                        Map<String, dynamic> dataDocMap = new Map<String, dynamic>();
-                        dataMap["name"] = committeeName;
-                        dataMap["title"] = title;
-                        DocumentSnapshot ds = await Firestore.instance.collection('events').
-                        document(selectedDate.month.toString() + '-' + selectedDate.year.toString()).get();
-                        List<String> newDays;
-                        if(ds.data != null){
-                          var days = new List<String>.from(ds['days']);
-                          if(days.contains(selectedDate.day.toString())){
-                            dataDocMap["days"] = days;
+                        if (form.validate() && selectedDate != null) {
+                          showDialog(context: context,
+                              barrierDismissible: false,
+                              builder: (context){
+                                return Center(
+                                  child: Container(child: new CircularProgressIndicator()
+                                  ),
+                                );
+                              }
+                          );
+                          final FormState form = _formKey.currentState;
+                          form.save();
+                          Map<String, dynamic> dataMap = new Map<String, dynamic>();
+                          Map<String, dynamic> dataDocMap = new Map<String, dynamic>();
+                          dataMap["name"] = committeeName;
+                          dataMap["title"] = title;
+                          DocumentSnapshot ds = await Firestore.instance.collection('events').
+                          document(selectedDate.month.toString() + '-' + selectedDate.year.toString()).get();
+                          List<String> newDays;
+                          if(ds.data != null){
+                            var days = new List<String>.from(ds['days']);
+                            if(days.contains(selectedDate.day.toString())){
+                              dataDocMap["days"] = days;
+                            }else{
+                              days.add(selectedDate.day.toString());
+                              dataDocMap["days"] = days;
+                            }
                           }else{
-                            days.add(selectedDate.day.toString());
-                            dataDocMap["days"] = days;
+                            List<String> newDays = new List();
+                            newDays.add(selectedDate.day.toString());
+                            dataDocMap["days"] = newDays;
                           }
-                        }else{
-                          List<String> newDays = new List();
-                          newDays.add(selectedDate.day.toString());
-                          dataDocMap["days"] = newDays;
-                        }
 
-                        await Firestore.instance.collection('events')
-                            .document(selectedDate.month.toString() + '-' + selectedDate.year.toString())
-                            .setData(dataDocMap);
-                        await Firestore.instance.collection('events')
-                            .document(selectedDate.month.toString() + '-' + selectedDate.year.toString())
-                            .collection(selectedDate.day.toString())
-                            .document()
-                            .setData(dataMap);
-                        Navigator.pop(context);
-                        Navigator.pop(context);
+                          await Firestore.instance.collection('events')
+                              .document(selectedDate.month.toString() + '-' + selectedDate.year.toString())
+                              .setData(dataDocMap);
+                          await Firestore.instance.collection('events')
+                              .document(selectedDate.month.toString() + '-' + selectedDate.year.toString())
+                              .collection(selectedDate.day.toString())
+                              .document()
+                              .setData(dataMap);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        }
                       }
                   )
                 ],

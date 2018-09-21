@@ -149,23 +149,32 @@ class _meetingPageState extends State<MeetingPage> {
                 stream: Firestore.instance.collection('users').snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) return Center(child: new CircularProgressIndicator());
+                  List<DocumentSnapshot> filtered = snapshot.data.documents;
+                  filtered.removeWhere((ds){
+                    return !widget.meetingItem.jUsersCommittee.contains(ds.documentID);
+                  });
                   return Expanded(
                     child: new Scrollbar(
                         child: ListView.builder(
-                            itemCount: widget.meetingItem.jUsersCommittee.length,
-                            itemExtent: 110.0,
+                            itemCount: filtered.length,
+                            itemExtent: 40.0,
                             padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                             itemBuilder: (context, index) {
-                              DocumentSnapshot ds = snapshot.data.documents[index];
-                              if(widget.meetingItem.jUsersCommittee.contains(ds.documentID)){
-                                bool uAttended = widget.meetingItem.aUsers.contains(ds.documentID);
+//                              print(widget.meetingItem.jUsersCommittee.length);
+//                              print(widget.meetingItem.jUsersCommittee);
+                              print("builder");
+                              print(index);
+                              //DocumentSnapshot ds = snapshot.data.documents[index];
+                              //if(widget.meetingItem.jUsersCommittee.contains(ds.documentID)){
+                                bool uAttended = widget.meetingItem.aUsers.contains(filtered.elementAt(index).documentID);
                                 return ListTile(
                                   leading: uAttended ? Icon(Icons.check_box, color: theme.primaryColor,) : Icon(Icons.check_box_outline_blank, color: theme.primaryColor,),
-                                  title: new Text(ds['name']),
+                                  title: new Text(filtered.elementAt(index)['fname'] + ' ' + filtered.elementAt(index)['lname']),
                                 );
-                              }else{
-                                return null;
-                              }
+//                              }
+//                              else{
+//                                return new Padding(padding: EdgeInsets.all(0.0));
+//                              }
                             }
                         )
                     ),

@@ -28,6 +28,12 @@ dependencies:
   http: '^0.11.3+17'
   cloud_functions: '^0.0.4'
 
+dependency_overrides:
+  cloud_functions:
+    git:
+      url: https://github.com/bashir-j/plugins.git
+      path: packages/cloud_functions
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -53,6 +59,7 @@ flutter:
         - asset: fonts/QRCodeIcons.ttf
 
   assets:
+    - secrets.json
     - fonts/config.json
     - images/placeholderSquare.png
     - images/logo.png

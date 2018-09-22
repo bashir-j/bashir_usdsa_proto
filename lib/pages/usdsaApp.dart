@@ -62,6 +62,16 @@ class usdsaAppState extends State<usdsaApp>{
       print(token);
     });
     _firebaseMessaging.subscribeToTopic("/topics/announcements");
+    SharedPreferences.getInstance().then((prefs){
+      var list = prefs.getStringList('topics');
+      userSing.userCommittees.forEach((comm){
+        _firebaseMessaging.subscribeToTopic("/topics/"+comm.replaceAll(' ', ''));
+        list.add("/topics/"+comm.replaceAll(' ', ''));
+      });
+      prefs.setStringList('topics', list);
+      print(list);
+    });
+
   }
 
 
@@ -153,6 +163,13 @@ class usdsaAppState extends State<usdsaApp>{
         return <Widget>[
           new IconButton(icon: Icon(Icons.exit_to_app), onPressed: (){
             SharedPreferences.getInstance().then((prefs){
+              var list = prefs.getStringList('topics');
+              print(list);
+              list.forEach((topic){
+                _firebaseMessaging.unsubscribeFromTopic(topic);
+              });
+              list.clear();
+              prefs.setStringList('topics', list);
               prefs.setBool('authed', null);
               FirebaseAuth.instance.signOut();
               Navigator.pushReplacement(

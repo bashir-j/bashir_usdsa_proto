@@ -53,9 +53,11 @@ packages:
   cloud_functions:
     dependency: "direct main"
     description:
-      name: cloud_functions
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "packages/cloud_functions"
+      ref: HEAD
+      resolved-ref: "5209fb68a5af398cd3c9601ab84f1dfa1385e959"
+      url: "https://github.com/bashir-j/plugins.git"
+    source: git
     version: "0.0.4"
   collection:
     dependency: transitive

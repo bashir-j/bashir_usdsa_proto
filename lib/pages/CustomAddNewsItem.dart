@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +13,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as p;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:usdsa_proto/EnsureVisWhileFocused.dart';
+import 'package:http/http.dart';
+import 'package:usdsa_proto/Secrets.dart';
 
 
 class CustomAddNewsItemPage extends StatefulWidget{
@@ -44,6 +47,41 @@ class _CustomAddNewsItemPageState extends State<CustomAddNewsItemPage>{
     final Uri downloadUrl = (await uploadTask.future).downloadUrl;
 
     dataMap["newsImgUrl"] = downloadUrl.toString();
+    dataMap["imgRef"] = "images/$fileName";
+    Secret secret = await SecretLoader(secretPath: "secrets.json").load();
+
+    String notifBody = dataMap["description"];
+//    if(notifBody.length > 60) {
+//      notifBody = notifBody.substring(0, 60);
+//      notifBody = notifBody + '...';
+//    }
+    Map<String, String> headers = {
+      'Content-type' : 'application/json',
+      'Authorization': secret.apiKey,
+    };
+    Map<String, String> notif = {
+      'sound': 'default',
+      'body' : notifBody,
+      'title': 'New Announcement Added',
+    };
+    Map<String, String> data = {
+      'click_action' : 'FLUTTER_NOTIFICATION_CLICK',
+      "id": "12",
+      "status": "done"
+    };
+    Map body = {
+      'notification' : notif,
+      'priority': 'high',
+      'data': data,
+      "to": "/topics/"+widget.committeeName.replaceAll(' ', '')
+    };
+    var vBody = jsonEncode(body);
+    Response resp = await post(
+      Uri.encodeFull("https://fcm.googleapis.com/fcm/send"),
+      headers: headers,
+      body: vBody,
+    );
+    print(resp.body);
 
     setState(() {
       Firestore.instance.collection('committees').document(widget.committeeName).collection('announcements').document().setData(dataMap);
@@ -68,7 +106,6 @@ class _CustomAddNewsItemPageState extends State<CustomAddNewsItemPage>{
   }
   @override
   Widget build(BuildContext context) {
-    //TODO Align with main
     final ThemeData theme = Theme.of(context);
     final TextStyle titleStyle = theme.textTheme.headline.copyWith(color: Colors.black);
     final TextStyle subStyle = theme.textTheme.body1.copyWith(fontSize: 22.0);

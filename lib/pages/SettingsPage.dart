@@ -53,13 +53,38 @@ class _settingsPageState extends State<SettingPage>{
               ],
             ),
             userSing.userPriority == '2' ?
-            new ListTile(leading: Icon(Icons.group_add),title: Text("Approve Users"), onTap: (){
-              Navigator.push(
-                context,
-                new MaterialPageRoute(builder: (context) => new ApproveUsersPage()),
-              );
-            },)
-            : new Container(),
+            Stack(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 48.0),
+                  //padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0),
+                  decoration: BoxDecoration(
+                    border: new Border.all(color: Colors.black54, width: 2.0),
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      new ListTile(leading: Icon(Icons.group_add),title: Text("Approve Users"), onTap: (){
+                        Navigator.push(
+                          context,
+                          new MaterialPageRoute(builder: (context) => new ApproveUsersPage()),
+                        );
+                      },
+                        trailing: Icon(Icons.chevron_right),
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                    margin: EdgeInsets.only(left: 32.0, top: 20.0),
+                    decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
+                    //padding: EdgeInsets.only(left: 64.0, top: 4.0),
+                    child: new Text("User Management", style: titleStyle,)
+                ),
+              ],
+            ) : new Container(),
+
           ],
         )
 //        Column(

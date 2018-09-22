@@ -54,7 +54,7 @@
         <entry key="cloud_functions">
           <value>
             <list>
-              <option value="$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_functions-0.0.4/lib" />
+              <option value="$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/git/plugins-5209fb68a5af398cd3c9601ab84f1dfa1385e959/packages/cloud_functions/lib" />
             </list>
           </value>
         </entry>
@@ -559,6 +559,7 @@
     </properties>
     <CLASSES>
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/git/flutter_calendar-ffe1dbab87de453448d1224d8e7858b4afc98522/lib" />
+      <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/git/plugins-5209fb68a5af398cd3c9601ab84f1dfa1385e959/packages/cloud_functions/lib" />
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/analyzer-0.32.4/lib" />
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/args-1.5.0/lib" />
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.0.8/lib" />
@@ -566,7 +567,6 @@
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/cached_network_image-0.4.2/lib" />
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/charcode-1.1.2/lib" />
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.7.2/lib" />
-      <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_functions-0.0.4/lib" />
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.14.11/lib" />
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/convert-2.0.2/lib" />
       <root url="file://$USER_HOME$/Desktop/Programs/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/crypto-2.0.6/lib" />

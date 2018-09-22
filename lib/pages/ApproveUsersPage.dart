@@ -34,6 +34,7 @@ class _approveUsersPage extends State<ApproveUsersPage>{
                         itemBuilder: (context, index) {
                           return ListTile(
                             title: new Text(filtered.elementAt(index)['fname'] + ' ' + filtered.elementAt(index)['lname']),
+                            subtitle: new Text(filtered.elementAt(index)['email']),
                             trailing: IconButton(icon: Icon(Icons.thumb_up), onPressed: (){
                               CloudFunctions.instance.call(
                                 functionName: 'enableUser',

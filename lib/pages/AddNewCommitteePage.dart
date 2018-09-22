@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:usdsa_proto/GroupItem.dart';
 import 'package:usdsa_proto/UserSingleton.dart';
 
@@ -9,7 +11,7 @@ class GroupItemCard extends StatelessWidget{
   GroupItemCard({ Key key, @required this.groupItem, this.registered })
       : assert(groupItem != null && groupItem.isValid),
         super(key: key);
-
+  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   final GroupItem groupItem;
   final bool registered;
   static const double height = 110.0;
@@ -232,6 +234,12 @@ class GroupItemCard extends StatelessWidget{
     userSing.userCommitteesItems.removeWhere((gI){
       return gI.groupName == groupItem.groupName;
     });
+    _firebaseMessaging.unsubscribeFromTopic("/topics/"+groupItem.groupName.replaceAll(' ', ''));
+    SharedPreferences.getInstance().then((prefs){
+      var list = prefs.getStringList('topics');
+      list.remove("/topics/"+groupItem.groupName.replaceAll(' ', ''));
+      prefs.setStringList('topics', list);
+    });
     Navigator.pop(context);
     Navigator.pop(context);
     Navigator.pop(context);
@@ -272,6 +280,12 @@ class GroupItemCard extends StatelessWidget{
           jUsers: jUsers,
         )
     );
+    _firebaseMessaging.subscribeToTopic("/topics/"+groupItem.groupName.replaceAll(' ', ''));
+    SharedPreferences.getInstance().then((prefs){
+      var list = prefs.getStringList('topics');
+      list.add("/topics/"+groupItem.groupName.replaceAll(' ', ''));
+      prefs.setStringList('topics', list);
+    });
     Navigator.pop(context);
     Navigator.pop(context);
     Navigator.pop(context);

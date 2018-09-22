@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:usdsa_proto/Secrets.dart';
 import 'package:usdsa_proto/UserSingleton.dart';
 import 'dart:convert';
 
@@ -43,7 +44,6 @@ class NewsItemCard extends StatelessWidget {
   UserSingleton userSing = new UserSingleton();
   @override
   Widget build(BuildContext context) {
-
     final ThemeData theme = Theme.of(context);
     final TextStyle titleStyle = theme.textTheme.headline.copyWith(color: Colors.black);
     final TextStyle descriptionStyle = theme.textTheme.subhead;
@@ -162,6 +162,7 @@ class NewsItemCard extends StatelessWidget {
           );
         }).toList()
     );
+    Secret secret = await SecretLoader(secretPath: "secrets.json").load();
     if (sel != null) {
       switch(sel){
         case "Send Notification":{
@@ -174,7 +175,7 @@ class NewsItemCard extends StatelessWidget {
           print("edi");
           Map<String, String> headers = {
             'Content-type' : 'application/json',
-            'Authorization': 'key=AIzaSyC7GOT3cQ9CcyWctrvjUXgaYRBV1zXeg3E',
+            'Authorization': secret.apiKey,
           };
           Map<String, String> notif = {
             'sound': 'default',

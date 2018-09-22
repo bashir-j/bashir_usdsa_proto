@@ -54,6 +54,9 @@ class _loginScreenState extends State<loginScreen>{
           userSing.userLName = ds['lname'];
           userSing.userCommittees = new List<String>.from(ds['rCommittees']);
           //handleFCM(user.uid);
+          List<String> topics = new List<String>();
+          topics.add("/topics/announcements");
+          prefs.setStringList('topics', topics);
           Navigator.pushReplacement(
             context,
             new MaterialPageRoute(
@@ -235,6 +238,7 @@ class _loginScreenState extends State<loginScreen>{
                                 });
                               }).catchError((error){
                                 Navigator.pop(context);
+                                print(error);
                                 PlatformException er = error;
                                 if(er.message.contains("password is invalid")){
                                   buildDialog("Incorrect Password", "The password is incorrect, please re-enter it & try again");

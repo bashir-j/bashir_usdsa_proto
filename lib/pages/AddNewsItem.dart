@@ -14,6 +14,7 @@ import 'package:path/path.dart' as p;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:usdsa_proto/EnsureVisWhileFocused.dart';
 import 'package:http/http.dart';
+import 'package:usdsa_proto/Secrets.dart';
 
 class AddNewsItemPage extends StatefulWidget{
 
@@ -46,6 +47,7 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
 
     dataMap["newsImgUrl"] = downloadUrl.toString();
     dataMap["imgRef"] = "images/$fileName";
+    Secret secret = await SecretLoader(secretPath: "secrets.json").load();
 
     String notifBody = dataMap["description"];
 //    if(notifBody.length > 60) {
@@ -54,7 +56,7 @@ class _AddNewsItemPageState extends State<AddNewsItemPage>{
 //    }
     Map<String, String> headers = {
       'Content-type' : 'application/json',
-      'Authorization': 'key=AIzaSyC7GOT3cQ9CcyWctrvjUXgaYRBV1zXeg3E',
+      'Authorization': secret.apiKey,
     };
     Map<String, String> notif = {
       'sound': 'default',

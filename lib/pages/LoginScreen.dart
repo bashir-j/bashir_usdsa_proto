@@ -240,16 +240,16 @@ class _loginScreenState extends State<loginScreen>{
                                 Navigator.pop(context);
                                 print(error);
                                 PlatformException er = error;
-                                if(er.message.contains("password is invalid")){
+                                if(er.message.contains("password is invalid") || er.details.toString().contains("password is invalid")){
                                   buildDialog("Incorrect Password", "The password is incorrect, please re-enter it & try again");
                                 }
-                                else if(er.message.contains("is no user record corresponding")){
+                                else if(er.message.contains("is no user record corresponding") || er.details.toString().contains("is no user record corresponding")){
                                   buildDialog("Invalid User", "The email entered is incorrect, please re-enter it & try again");
                                 }
-                                else if(er.message.contains("network error")){
+                                else if(er.message.contains("network error") || er.details.toString().contains("network error")){
                                   buildDialog("Network Error", "A network error occured, please check your connection & try again");
                                 }
-                                else if(er.message.contains("user account has been")){
+                                else if(er.message.contains("user account has been") || er.details.toString().contains("user account has been")){
                                   buildDialog("Account Not Yet Enabled", "Your account has not yet been enabled. Please contact an admin to enable your account");
                                 }
                                 else{

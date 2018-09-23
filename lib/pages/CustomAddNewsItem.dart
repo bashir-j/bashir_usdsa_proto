@@ -47,7 +47,7 @@ class _CustomAddNewsItemPageState extends State<CustomAddNewsItemPage>{
     final Uri downloadUrl = (await uploadTask.future).downloadUrl;
 
     dataMap["newsImgUrl"] = downloadUrl.toString();
-    dataMap["imgRef"] = "images/$fileName";
+    dataMap["imgRef"] = "images/"+widget.committeeName+"/$fileName";
     Secret secret = await SecretLoader(secretPath: "secrets.json").load();
 
     String notifBody = dataMap["description"];

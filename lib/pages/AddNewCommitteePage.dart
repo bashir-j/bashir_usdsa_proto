@@ -278,6 +278,8 @@ class GroupItemCard extends StatelessWidget{
           groupIconURL: cds['iconUrl'],
           password: cds['password'],
           jUsers: jUsers,
+          headEmail: cds['hEmail'],
+          headName: cds['hName'],
         )
     );
     _firebaseMessaging.subscribeToTopic("/topics/"+groupItem.groupName.replaceAll(' ', ''));
@@ -327,6 +329,8 @@ class _AddCommitteePageState extends State<AddNewCommitteePage>{
                             description: ds['description'],
                             password: ds['password'],
                             jUsers: jUsers,
+                            headEmail: ds['hEmail'],
+                            headName: ds['hName'],
                         );
                         bool reg = userSing.userCommittees.contains(snapshotToItem.groupName);
                         return new Container(

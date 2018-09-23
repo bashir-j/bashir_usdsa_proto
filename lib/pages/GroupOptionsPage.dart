@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:usdsa_proto/GroupItem.dart';
+import 'package:usdsa_proto/pages/GroupInfoPage.dart';
 import 'package:usdsa_proto/pages/MeetingsListPage.dart';
 import 'GroupsList.dart';
 import 'CustomNewsStream.dart';
@@ -21,13 +22,12 @@ class GroupOption{
 }
 
 class GroupOptionItemCard extends StatelessWidget{
-  GroupOptionItemCard({ Key key, @required this.groupOption, @required this.groupItemName, this.jUsers })
-      : assert(groupOption != null && groupOption.isValid && groupItemName != null),
+  GroupOptionItemCard({ Key key, @required this.groupOption, @required this.groupItem })
+      : assert(groupOption != null && groupOption.isValid && groupItem != null),
         super(key: key);
 
   final GroupOption groupOption;
-  final String groupItemName;
-  final List<String> jUsers;
+  final GroupItem groupItem;
 
   static const double height = 110.0;
   @override
@@ -42,16 +42,28 @@ class GroupOptionItemCard extends StatelessWidget{
           if(groupOption == groupsOptionsList[0]){
             Navigator.push(
               context,
-              new MaterialPageRoute(builder: (context) => new customNewsStreamBuilder(committeeName: groupItemName)),
+              new MaterialPageRoute(builder: (context) => new customNewsStreamBuilder(
+                  committeeName: groupItem.groupName
+              )),
             );
           }else if (groupOption == groupsOptionsList[1]){
             Navigator.push(
               context,
-              new MaterialPageRoute(builder: (context) => new meetingsList(committeeName: groupItemName, jUsers: jUsers)),
+              new MaterialPageRoute(builder: (context) => new meetingsList(
+                  committeeName: groupItem.groupName, jUsers: groupItem.jUsers
+              )),
             );
           }
           else if (groupOption == groupsOptionsList[2]){
-
+            Navigator.push(
+              context,
+              new MaterialPageRoute(builder: (context) => new groupInfo(
+                committeeName: groupItem.groupName,
+                jUsers: groupItem.jUsers,
+                headEmail: groupItem.headEmail,
+                headName: groupItem.headName,
+              )),
+            );
           }
           else{
 
@@ -85,25 +97,7 @@ class GroupOptionItemCard extends StatelessWidget{
                   ],
                 ),
               ),
-              new IconButton(
-                  icon: new Icon(Icons.chevron_right),
-                  onPressed: (){
-                    if(groupOption == groupsOptionsList[0]){
-                      Navigator.push(
-                        context,
-                        new MaterialPageRoute(builder: (context) => new customNewsStreamBuilder(committeeName: groupItemName)),
-                      );
-                    }else if (groupOption == groupsOptionsList[1]){
-
-                    }
-                    else if (groupOption == groupsOptionsList[2]){
-
-                    }
-                    else{
-
-                    }
-                  }
-              )
+              new Icon(Icons.chevron_right),
             ],
           ),
         ),
@@ -116,12 +110,12 @@ class GroupOptionItemCard extends StatelessWidget{
 
 
 class _groupOptionsBuilder extends StatelessWidget{
-  _groupOptionsBuilder({ Key key, @required this.groupItemName, this.jUsers})
-      : assert(groupItemName != null),
+  _groupOptionsBuilder({ Key key, @required this.groupItem})
+      : assert(groupItem != null),
         super(key: key);
 
-  final String groupItemName;
-  final List<String> jUsers;
+
+  final GroupItem groupItem;
   @override
   Widget build(BuildContext context) {
     return new Scrollbar(
@@ -138,8 +132,7 @@ class _groupOptionsBuilder extends StatelessWidget{
         margin: const EdgeInsets.only(bottom: 8.0),
         child: new GroupOptionItemCard(
           groupOption: groupOption,
-          groupItemName: groupItemName,
-          jUsers: jUsers,
+          groupItem: groupItem,
         ),
       );
     }).toList();
@@ -192,7 +185,7 @@ class _GroupPageState extends State<GroupPage> {
         ),
 
       ),
-      body: new _groupOptionsBuilder(groupItemName: widget.groupItem.groupName, jUsers: widget.groupItem.jUsers,),
+      body: new _groupOptionsBuilder(groupItem: widget.groupItem,),
     );
   }
 }
@@ -211,6 +204,6 @@ final List<GroupOption> groupsOptionsList = <GroupOption>[
   const GroupOption(
     optionIcon: Icons.info,
     optionName: 'Committee Info',
-    description: "View information about this group",
+    description: "View information about this committee",
   ),
 ];

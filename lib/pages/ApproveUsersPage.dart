@@ -10,7 +10,6 @@ class ApproveUsersPage extends StatefulWidget{
 class _approveUsersPage extends State<ApproveUsersPage>{
   @override
   Widget build(BuildContext context) {
-    //TODO Pretty it up
     return new Scaffold(
       appBar: new AppBar(
         title: Text("Users Awaiting Approval"),
@@ -29,7 +28,7 @@ class _approveUsersPage extends State<ApproveUsersPage>{
                 return new Scrollbar(
                     child: ListView.builder(
                         itemCount: filtered.length,
-                        itemExtent: 40.0,
+                        itemExtent: 60.0,
                         padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                         itemBuilder: (context, index) {
                           return ListTile(

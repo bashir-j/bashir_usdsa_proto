@@ -23,6 +23,7 @@ class _loginScreenState extends State<loginScreen>{
   String spEmail;
   String spPass;
   bool checking;
+  String resetEmail;
   bool isValidEmail(String input) {
     final RegExp regex = new RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
     return regex.hasMatch(input);
@@ -76,6 +77,8 @@ class _loginScreenState extends State<loginScreen>{
                   groupIconURL: cds['iconUrl'],
                   password: cds['password'],
                   jUsers: jUsers,
+                  headEmail: cds['hEmail'],
+                  headName: cds['hName'],
                 )
             );
           });
@@ -233,6 +236,8 @@ class _loginScreenState extends State<loginScreen>{
                                       groupIconURL: cds['iconUrl'],
                                       password: cds['password'],
                                       jUsers: jUsers,
+                                      headEmail: cds['hEmail'],
+                                      headName: cds['hName'],
                                     )
                                   );
                                 });
@@ -276,8 +281,13 @@ class _loginScreenState extends State<loginScreen>{
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 12.0),
-                        child: new Text("Forgot Password?",
-                          style: TextStyle(color: Colors.white, fontSize: 22.0, decoration: TextDecoration.underline),
+                        child: GestureDetector(
+                          onTap: (){
+                            buildPassResetDialog();
+                          },
+                          child: new Text("Forgot Password?",
+                            style: TextStyle(color: Colors.white, fontSize: 22.0, decoration: TextDecoration.underline),
+                          ),
                         ),
                       ),
                     ],
@@ -295,6 +305,141 @@ class _loginScreenState extends State<loginScreen>{
       );
   }
 
+  buildPassResetDialog(){
+    final ios = Theme.of(context).platform == TargetPlatform.iOS;
+    showDialog(context: context, builder: (BuildContext context){
+      if (!ios) {
+        return new AlertDialog(
+            title: new Text("Enter Email Linked To Your Account"),
+            content: new TextField(
+              onChanged: (String text) {
+                resetEmail = text;
+              },
+            ),
+            actions: <Widget>[
+              new FlatButton(onPressed: (){
+                Navigator.of(context).pop();
+              },
+                  child: new Text("Cancel")
+              ),
+              new FlatButton(onPressed: (){
+                showDialog(context: context,
+                    barrierDismissible: false,
+                    builder: (context){
+                      return Center(
+                        child: Container(child: new CircularProgressIndicator()
+                        ),
+                      );
+                    }
+                );
+                if(resetEmail != null) {
+                  FirebaseAuth.instance.sendPasswordResetEmail(
+                      email: resetEmail).then((res) {
+                    showDialog(context: context, builder: (BuildContext context){
+                      return new AlertDialog(
+                        title: new Text("Reset Email Sent"),
+                        content: new Text("Please check the email entered for a link to reset your password."),
+                        actions: <Widget>[
+                          new FlatButton(onPressed: (){
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          },
+                              child: new Text("Dismiss")
+                          ),
+                        ],
+                      );
+                    });
+                  }).catchError((error) {
+                    PlatformException er = error;
+                    //Navigator.of(context).pop();
+                    showDialog(context: context, builder: (BuildContext context){
+                      return new AlertDialog(
+                        title: new Text("Error Sending Email"),
+                        content: new Text(er.message),
+                        actions: <Widget>[
+                          new FlatButton(onPressed: (){
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          },
+                              child: new Text("Dismiss")
+                          ),
+                        ],
+                      );
+                    });
+
+                  });
+                }
+              },
+                  child: new Text("Submit")
+              ),
+            ]
+        );
+      } else {
+        return new CupertinoAlertDialog(
+            title: new Text("Enter Email Linked To Your Account"),
+            content: Card(
+              elevation: 0.0,
+              child: new TextField(
+                onChanged: (String text) {
+                  resetEmail = text;
+                },
+              ),
+            ),
+            actions: <Widget>[
+              new CupertinoDialogAction(onPressed: (){
+                Navigator.of(context).pop();
+              },
+                  child: new Text("Cancel")
+              ),
+              new CupertinoDialogAction(onPressed: (){
+                if(resetEmail != null) {
+                  FirebaseAuth.instance.sendPasswordResetEmail(
+                      email: resetEmail).then((res) {
+                    Navigator.of(context).pop();
+                    showDialog(context: context, builder: (BuildContext context){
+                      return new CupertinoAlertDialog(
+                        title: new Text("Reset Email Sent"),
+                        content: new Text("Please check the email entered for a link to reset your password."),
+                        actions: <Widget>[
+                          new CupertinoDialogAction(onPressed: (){
+                            Navigator.of(context).pop();
+                          },
+                              child: new Text("Dismiss")
+                          ),
+                        ],
+                      );
+                    });
+                  }).catchError((error) {
+                    PlatformException er = error;
+                    Navigator.of(context).pop();
+                    showDialog(context: context, builder: (BuildContext context){
+                      return new CupertinoAlertDialog(
+                        title: new Text("Error Sending Email"),
+                        content: new Text(er.details),
+                        actions: <Widget>[
+                          new CupertinoDialogAction(onPressed: (){
+                            Navigator.of(context).pop();
+                          },
+                              child: new Text("Dismiss")
+                          ),
+                        ],
+                      );
+                    });
+
+                  });
+                }
+              },
+                child: new Text("Submit"),
+                isDefaultAction: true,
+              ),
+            ]
+        );
+      }
+    });
+
+  }
   buildDialog(String title, String desc){
     final ios = Theme.of(context).platform == TargetPlatform.iOS;
     showDialog(context: context, builder: (BuildContext context){
@@ -316,6 +461,7 @@ class _loginScreenState extends State<loginScreen>{
           content: new Text(desc),
           actions: <Widget>[
             new CupertinoDialogAction(
+              isDefaultAction: true,
               child: new Text("Okay"),
               onPressed: (){
                 Navigator.of(context).pop();

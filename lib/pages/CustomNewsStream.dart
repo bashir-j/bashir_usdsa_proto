@@ -220,9 +220,10 @@ class NewsItemCard extends StatelessWidget {
             ref = ref.split("?alt=").elementAt(0);
             ref = ref.replaceAll("%20", " ");
             ref = ref.replaceAll("%3A", ":");
+            ref = ref.replaceAll("%2F", "/");
             print(ref);
             Firestore.instance.collection("committees").document(newsItem.commName).collection('announcements').document(newsItem.docID).delete();
-            FirebaseStorage.instance.ref().child("images/"+newsItem.commName+'/'+ref).delete();
+            FirebaseStorage.instance.ref().child("images/"+ref).delete();
           }
 
         }

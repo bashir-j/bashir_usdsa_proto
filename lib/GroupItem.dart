@@ -4,7 +4,9 @@ class GroupItem{
     this.groupName,
     this.description,
     this.password,
-    this.jUsers
+    this.jUsers,
+    this.headEmail,
+    this.headName,
   });
 
   final String groupIconURL;
@@ -12,6 +14,8 @@ class GroupItem{
   final String description;
   final String password;
   final List<String> jUsers;
+  final String headName;
+  final String headEmail;
 
   bool get isValid => groupIconURL != null && groupName != null && description != null;
 }

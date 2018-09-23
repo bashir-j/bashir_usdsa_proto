@@ -216,6 +216,7 @@ class NewsItemCard extends StatelessWidget {
             ref = ref.split("?alt=").elementAt(0);
             ref = ref.replaceAll("%20", " ");
             ref = ref.replaceAll("%3A", ":");
+            ref = ref.replaceAll("%2F", "/");
             print(ref);
             Firestore.instance.collection("announcements").document(newsItem.docID).delete();
             FirebaseStorage.instance.ref().child("images/"+ref).delete();

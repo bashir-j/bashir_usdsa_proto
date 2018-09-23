@@ -11,7 +11,6 @@ class SettingPage extends StatefulWidget{
 class _settingsPageState extends State<SettingPage>{
   @override
   Widget build(BuildContext context) {
-    //TODO Pretty IT UPP
     UserSingleton userSing = new UserSingleton();
     final ThemeData theme = Theme.of(context);
     final TextStyle titleStyle = theme.textTheme.headline.copyWith(color: Colors.black, fontSize: 32.0);

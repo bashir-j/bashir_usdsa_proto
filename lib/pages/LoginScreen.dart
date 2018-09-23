@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +9,6 @@ import 'package:usdsa_proto/pages/CreateNewAccount.dart';
 import 'usdsaApp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:usdsa_proto/UserSingleton.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 
 class loginScreen extends StatefulWidget{
   _loginScreenState createState() => new _loginScreenState();
@@ -393,6 +390,15 @@ class _loginScreenState extends State<loginScreen>{
                   child: new Text("Cancel")
               ),
               new CupertinoDialogAction(onPressed: (){
+                showDialog(context: context,
+                    barrierDismissible: false,
+                    builder: (context){
+                      return Center(
+                        child: Container(child: new CircularProgressIndicator()
+                        ),
+                      );
+                    }
+                );
                 if(resetEmail != null) {
                   FirebaseAuth.instance.sendPasswordResetEmail(
                       email: resetEmail).then((res) {

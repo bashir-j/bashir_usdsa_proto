@@ -214,6 +214,9 @@ class _loginScreenState extends State<loginScreen>{
                                 userSing.userCommittees = new List<String>.from(ds['rCommittees']);
                                 //handleFCM(user.uid);
                                 Navigator.pop(context);
+                                List<String> topics = new List<String>();
+                                topics.add("/topics/announcements");
+                                prefs.setStringList('topics', topics);
                                 Navigator.pushReplacement(
                                   context,
                                   new MaterialPageRoute(
@@ -373,6 +376,7 @@ class _loginScreenState extends State<loginScreen>{
             ]
         );
       } else {
+        //TODO this looks like ass
         return new CupertinoAlertDialog(
             title: new Text("Enter Email Linked To Your Account"),
             content: Card(

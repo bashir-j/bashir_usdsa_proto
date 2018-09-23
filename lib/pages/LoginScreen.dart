@@ -352,7 +352,6 @@ class _loginScreenState extends State<loginScreen>{
                     });
                   }).catchError((error) {
                     PlatformException er = error;
-                    //Navigator.of(context).pop();
                     showDialog(context: context, builder: (BuildContext context){
                       return new AlertDialog(
                         title: new Text("Error Sending Email"),
@@ -397,13 +396,14 @@ class _loginScreenState extends State<loginScreen>{
                 if(resetEmail != null) {
                   FirebaseAuth.instance.sendPasswordResetEmail(
                       email: resetEmail).then((res) {
-                    Navigator.of(context).pop();
                     showDialog(context: context, builder: (BuildContext context){
                       return new CupertinoAlertDialog(
                         title: new Text("Reset Email Sent"),
                         content: new Text("Please check the email entered for a link to reset your password."),
                         actions: <Widget>[
                           new CupertinoDialogAction(onPressed: (){
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
                             Navigator.of(context).pop();
                           },
                               child: new Text("Dismiss")
@@ -413,13 +413,14 @@ class _loginScreenState extends State<loginScreen>{
                     });
                   }).catchError((error) {
                     PlatformException er = error;
-                    Navigator.of(context).pop();
                     showDialog(context: context, builder: (BuildContext context){
                       return new CupertinoAlertDialog(
                         title: new Text("Error Sending Email"),
                         content: new Text(er.details),
                         actions: <Widget>[
                           new CupertinoDialogAction(onPressed: (){
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
                             Navigator.of(context).pop();
                           },
                               child: new Text("Dismiss")

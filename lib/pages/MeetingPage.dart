@@ -1,6 +1,7 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:usdsa_proto/UserSingleton.dart';
@@ -63,7 +64,8 @@ class _meetingPageState extends State<MeetingPage> {
         appBar: new AppBar(
         title: Text(widget.meetingItem.title), 
         actions: userSing.userPriority == '2' ? <Widget>[
-          new IconButton(icon: Icon(QRCodeIcons.qrcode), onPressed: () => showQRDialog())
+          new IconButton(icon: Icon(QRCodeIcons.qrcode), onPressed: () => showQRDialog()),
+          new IconButton(icon: Icon(Icons.delete), onPressed: () => deleteMeeting())
         ] : null,
         ),
         body: new SafeArea(
@@ -154,29 +156,19 @@ class _meetingPageState extends State<MeetingPage> {
                     return !widget.meetingItem.jUsersCommittee.contains(ds.documentID);
                   });
                   return Expanded(
-                    child: new Scrollbar(
-                        child: ListView.builder(
-                            itemCount: filtered.length,
-                            itemExtent: 40.0,
-                            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
-                            itemBuilder: (context, index) {
-//                              print(widget.meetingItem.jUsersCommittee.length);
-//                              print(widget.meetingItem.jUsersCommittee);
-                              print("builder");
-                              print(index);
-                              //DocumentSnapshot ds = snapshot.data.documents[index];
-                              //if(widget.meetingItem.jUsersCommittee.contains(ds.documentID)){
-                                bool uAttended = widget.meetingItem.aUsers.contains(filtered.elementAt(index).documentID);
-                                return ListTile(
-                                  leading: uAttended ? Icon(Icons.check_box, color: theme.primaryColor,) : Icon(Icons.check_box_outline_blank, color: theme.primaryColor,),
-                                  title: new Text(filtered.elementAt(index)['fname'] + ' ' + filtered.elementAt(index)['lname']),
-                                );
-//                              }
-//                              else{
-//                                return new Padding(padding: EdgeInsets.all(0.0));
-//                              }
-                            }
-                        )
+                    child: Scrollbar(
+                      child: ListView.builder(
+                        itemCount: filtered.length,
+                          itemExtent: 40.0,
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          itemBuilder: (context, index) {
+                            bool uAttended = widget.meetingItem.aUsers.contains(filtered.elementAt(index).documentID);
+                            return ListTile(
+                              leading: uAttended ? Icon(Icons.check_box, color: theme.primaryColor,) : Icon(Icons.check_box_outline_blank, color: theme.primaryColor,),
+                              title: new Text(filtered.elementAt(index)['fname'] + ' ' + filtered.elementAt(index)['lname']),
+                            );
+                          }
+                      ),
                     ),
                   );
                 }
@@ -186,6 +178,88 @@ class _meetingPageState extends State<MeetingPage> {
           ),
         ),
     );
+  }
+
+  deleteMeeting(){
+    final ios = Theme.of(context).platform == TargetPlatform.iOS;
+    showDialog(context: context, builder: (BuildContext context){
+      if(!ios){
+        return new AlertDialog(
+          title: new Text("Delete Meeting"),
+          content: new Text("Are you sure you would like to delete this meeting?"),
+          actions: <Widget>[
+            new FlatButton(onPressed: (){
+              Navigator.of(context).pop();
+            },
+                child: new Text("Cancel")
+            ),
+            new FlatButton(onPressed: ()async {
+              showDialog(context: context,
+                  barrierDismissible: false,
+                  builder: (context){
+                    return Center(
+                      child: Container(child: new CircularProgressIndicator()
+                      ),
+                    );
+                  }
+              );
+              await Firestore.instance
+                  .collection('committees')
+                  .document(widget.meetingItem.committeeName)
+                  .collection('meetings')
+                  .document(widget.meetingItem.meetingID)
+                  .delete();
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+              child: new Text("Delete"),
+              textColor: Colors.red,
+            ),
+          ],
+        );
+      }else{
+        return new CupertinoAlertDialog(
+          title: new Text("Delete Meeting"),
+          content: new Text("Are you sure you would like to delete this meeting?"),
+          actions: <Widget>[
+            new CupertinoDialogAction(
+              child: new Text("Cancel"),
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+            ),
+            new CupertinoDialogAction(
+              child: new Text("Delete"),
+              isDestructiveAction: true,
+              onPressed: ()async {
+                showDialog(context: context,
+                    barrierDismissible: false,
+                    builder: (context){
+                      return Center(
+                        child: Container(child: new CircularProgressIndicator()
+                        ),
+                      );
+                    }
+                );
+                await Firestore.instance
+                    .collection('committees')
+                    .document(widget.meetingItem.committeeName)
+                    .collection('meetings')
+                    .document(widget.meetingItem.meetingID)
+                    .delete();
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      }
+    }).whenComplete((){
+
+    });
+
   }
 
   showQRDialog(){

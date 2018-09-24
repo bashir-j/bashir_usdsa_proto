@@ -23,6 +23,9 @@ class _approveUsersPage extends State<ApproveUsersPage>{
                 if (!snapshot.hasData) return Center(child: new CircularProgressIndicator());
                 List<DocumentSnapshot> filtered = snapshot.data.documents;
                 filtered.removeWhere((ds){
+                  if(ds['rejected'] != null){
+                    return true;
+                  }
                   return ds['enabled'];
                 });
                 return new Scrollbar(
@@ -34,17 +37,27 @@ class _approveUsersPage extends State<ApproveUsersPage>{
                           return ListTile(
                             title: new Text(filtered.elementAt(index)['fname'] + ' ' + filtered.elementAt(index)['lname']),
                             subtitle: new Text(filtered.elementAt(index)['email']),
-                            trailing: IconButton(icon: Icon(Icons.thumb_up), onPressed: (){
-                              CloudFunctions.instance.call(
-                                functionName: 'enableUser',
-                                  parameters: <String, dynamic>{
-                                    'uid': filtered.elementAt(index).documentID,
-                                  },
-                              );
-                              Map<String, dynamic> data = new Map<String, dynamic>();
-                              data['enabled'] = true;
-                              Firestore.instance.collection('users').document(filtered.elementAt(index).documentID).setData(data, merge: true);
-                            }),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                IconButton(icon: Icon(Icons.thumb_up), onPressed: (){
+                                  CloudFunctions.instance.call(
+                                    functionName: 'enableUser',
+                                      parameters: <String, dynamic>{
+                                        'uid': filtered.elementAt(index).documentID,
+                                      },
+                                  );
+                                  Map<String, dynamic> data = new Map<String, dynamic>();
+                                  data['enabled'] = true;
+                                  Firestore.instance.collection('users').document(filtered.elementAt(index).documentID).setData(data, merge: true);
+                                }),
+                                IconButton(icon: Icon(Icons.thumb_down), onPressed: (){
+                                  Map<String, dynamic> data = new Map<String, dynamic>();
+                                  data['rejected'] = true;
+                                  Firestore.instance.collection('users').document(filtered.elementAt(index).documentID).setData(data, merge: true);
+                                }),
+                              ],
+                            ),
                           );
                         }
                     )

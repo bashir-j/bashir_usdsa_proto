@@ -192,7 +192,7 @@ class _AddMeetingPageState extends State<AddMeetingPage>{
                                         }
                                     );
                                     setState(() {
-                                      selectedDate = new DateTime.utc(selectedDate.year,selectedDate.month,selectedDate.day,hours[_selectedHourIndex],15);
+                                      selectedDate = new DateTime.utc(selectedDate.year,selectedDate.month,selectedDate.day,hours[_selectedHourIndex],0);
                                     });
 //                                    DatePicker.showDatePicker(
 //                                      context,

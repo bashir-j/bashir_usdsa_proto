@@ -72,7 +72,7 @@ class _meetingsListState extends State<meetingsList>{
                           },
                           title: Text(snapshotToItem.title),
                           subtitle: Text(snapshotToItem.date),
-                          leading: attended ? Icon(Icons.check): Icon(Icons.clear),
+                          leading: attended ? Icon(Icons.check_box): Icon(Icons.check_box_outline_blank),
                           trailing: Icon(Icons.chevron_right),
                         );
                       }

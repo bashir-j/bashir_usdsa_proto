@@ -55,20 +55,20 @@ class _groupInfoState extends State<groupInfo>{
                 ),
               ],
             ),
-            Stack(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 48.0),
-                  //padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0),
-                  decoration: BoxDecoration(
-                    border: new Border.all(color: Colors.black54, width: 2.0),
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  ),
-                  child:
-                  Column(
-                    children: <Widget>[
-                      new StreamBuilder(
+            Expanded(
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 48.0, bottom: 16.0),
+                    //padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0),
+                    decoration: BoxDecoration(
+                      border: new Border.all(color: Colors.black54, width: 2.0),
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    ),
+                    child:
+                    Scrollbar(
+                      child: new StreamBuilder(
                           stream: Firestore.instance.collection('users').snapshots(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) return Center(child: new CircularProgressIndicator());
@@ -81,7 +81,7 @@ class _groupInfoState extends State<groupInfo>{
                                 shrinkWrap: true,
                                 itemCount: filtered.length,
                                 itemExtent: 40.0,
-                                padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+                                padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                                 itemBuilder: (context, index) {
                                   return ListTile(
                                     title: new Text(filtered.elementAt(index)['fname'] + ' ' + filtered.elementAt(index)['lname']),
@@ -90,16 +90,16 @@ class _groupInfoState extends State<groupInfo>{
                             );
                           }
                       ),
-                    ],
+                    ),
                   ),
-                ),
-                Container(
-                    margin: EdgeInsets.only(left: 32.0, top: 20.0),
-                    decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
-                    //padding: EdgeInsets.only(left: 64.0, top: 4.0),
-                    child: new Text("Committee Members", style: titleStyle,)
-                ),
-              ],
+                  Container(
+                      margin: EdgeInsets.only(left: 32.0, top: 20.0),
+                      decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
+                      //padding: EdgeInsets.only(left: 64.0, top: 4.0),
+                      child: new Text("Committee Members", style: titleStyle,)
+                  ),
+                ],
+              ),
             ),
           ],
         ),
